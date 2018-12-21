@@ -14,9 +14,17 @@ export class RequestHandlerUtils{
             }
             catch(err){
                 callback(err, null);
+                return;
             }
 
             callback(null, json);
         });
+    }
+
+    public static getCORSHeader(origin:string="*"):{[header:string]: string}{
+        return {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Headers": "Access-Control-Allow-Origin"
+        };
     }
 }

@@ -5,6 +5,7 @@ import * as https from "https";
 import { MongoClient } from "mongodb";
 import { SettingsUtils, SettingsConfig } from "../utils/SettingsUtils";
 import { DBController } from "../database/DBController";
+import { RequestHandlerUtils } from "../utils/RequestHandlerUtils";
 import { AccountCreateHandler } from './handlers/AccountCreateHandler';
 
 export class WebServer{
@@ -15,7 +16,7 @@ export class WebServer{
     private _database:DBController;
 
     constructor(){
-        this._app = express().use(express.static(`${__dirname}/../../web/build/index.html`));
+        this._app = express().use(express.static(`${__dirname}/../../web/build`));
         this._httpServer = http.createServer(this._app);
         this._wsServer = new websocket.server({httpServer: this._httpServer});
         this._settings = null;
@@ -28,7 +29,16 @@ export class WebServer{
     private createRoutes():void{
         this._app.get("/", (req, res) => res.sendFile("index.html"));
 
-        this._app.post("/accounts/create", (req, res) => AccountCreateHandler.createAccount(this._database, req, res));
+        this._app.options("/api*", (req, res) => {
+            console.log('opts');
+            res.writeHead(204, RequestHandlerUtils.getCORSHeader());
+            res.end();
+        });
+
+        this._app.post("/api/accounts/create", (req, res) => {
+            console.log("REQUEST")
+            AccountCreateHandler.createAccount(this._database, req, res)
+        });
     }
 
     private async init():Promise<any>{

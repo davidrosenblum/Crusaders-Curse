@@ -17,7 +17,7 @@ export class Register extends React.Component{
     onSubmit(evt){
         evt.preventDefault();
 
-        let url = window.location.origin.replace("localhost:3000", "localhost:8080");
+        let url = `${window.location.origin.replace("localhost:3000", "localhost:8080")}/api/accounts/create`;
 
         let headers = {
             "Access-Control-Allow-Origin": window.location.origin
@@ -28,7 +28,6 @@ export class Register extends React.Component{
             confirm = this.confirmInput.value;
 
         if(password !== confirm){
-            console.log("BAD INPUTS")
             ModalDispatcher.modal("Passwords do no match.", "Error");
             return;
         }

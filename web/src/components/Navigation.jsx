@@ -12,7 +12,7 @@ export class Navigation extends React.Component{
     }
 
     toggleNavbar(){
-        this.setState(prev => {{navOpen: !prev.navOpen}});
+        this.setState({navOpen: !this.state.navOpen});
     }
 
     onHome(){
