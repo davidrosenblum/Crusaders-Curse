@@ -17,8 +17,15 @@ export class AccountCreateHandler{
                             res.end(response);
                         })
                         .catch(err => {
-                            res.writeHead(400, headers);
-                            res.end(err.message);
+                            if(err.code === 11000){
+                                res.writeHead(400, headers);
+                                res.end(`Account "${username}" already exists.`);
+                            }
+                            else{
+                                console.log(err.message);
+                                res.writeHead(500, headers);
+                                res.end("Internal server error.");
+                            }          
                         });
                 }
                 else{

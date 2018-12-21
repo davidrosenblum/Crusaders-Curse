@@ -30,13 +30,11 @@ export class WebServer{
         this._app.get("/", (req, res) => res.sendFile("index.html"));
 
         this._app.options("/api*", (req, res) => {
-            console.log('opts');
             res.writeHead(204, RequestHandlerUtils.getCORSHeader());
             res.end();
         });
 
         this._app.post("/api/accounts/create", (req, res) => {
-            console.log("REQUEST")
             AccountCreateHandler.createAccount(this._database, req, res)
         });
     }

@@ -38,15 +38,15 @@ export class DBController{
 
     private createCollections():void{
         this._database.createCollection("accounts", (err, res) => {
-            this._database.collection("accounts").createIndex("username");
+            this._database.collection("accounts").createIndex({username: 1}, {unique: true})
         });
 
         this._database.createCollection("salts", (err, res) => {
-            this._database.collection("salts").createIndex("username");
+            this._database.collection("salts").createIndex({username: 1}, {unique: true});
         });
 
         this._database.createCollection("characters", (err, res) => {
-            this._database.collection("characters").createIndex("name");
+            this._database.collection("characters").createIndex({name: 1}, {unique: true});
         });
     }
 
@@ -68,11 +68,11 @@ export class DBController{
                 .then(result => {
                     if(result){
                         this.storeSalt(username, salt)
-                            .then(() => resolve(`Account ${username} created.`))
+                            .then(() => resolve(`Account "${username}" created.`))
                             .catch(err => reject(err));
                         
                     }
-                    else reject(new Error(`Unable to create account ${username}.`));
+                    else reject(new Error(`Unable to create account "${username}".`));
                 })
                 .catch(err => reject(err));
         });
@@ -93,7 +93,7 @@ export class DBController{
                                     if(account.enabled){
                                         resolve(new DBAccount(account.accountID, account.username));
                                     }
-                                    else reject(new Error("Account is disabled."));
+                                    else reject(new Error(`Account "${username}" is disabled.`));
                                     
                                 }
                                 else reject(new Error("Wrong password."));
