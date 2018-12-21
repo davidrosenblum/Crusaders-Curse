@@ -1,6 +1,7 @@
-import { Db, InsertOneWriteOpResult } from "mongodb";
+import { Db, InsertOneWriteOpResult, DeleteWriteOpResultObject } from "mongodb";
 import { DBAccount } from "./DBAccount";
-import { DBAccountSchema, DBSaltSchema } from "./DBSchema";
+import { DBAccountSchema, DBSaltSchema, DBCharacterSchema, DBCharacterPreviewSchema, createDefaultCharacter } from "./DBSchema";
+import { getArchetypeName, getMapName } from "../data/Data";
 import { TokenGenerator } from "../utils/TokenGenerator";
 
 export class DBController{
@@ -12,6 +13,7 @@ export class DBController{
 
     constructor(mongoDatabase:Db){
         this._database = mongoDatabase;
+        this.createCollections();
     }
 
     private static salt(input:string):string{
@@ -32,6 +34,20 @@ export class DBController{
         }
 
         return buffer.join("");
+    }
+
+    private createCollections():void{
+        this._database.createCollection("accounts", (err, res) => {
+            this._database.collection("accounts").createIndex("username");
+        });
+
+        this._database.createCollection("salts", (err, res) => {
+            this._database.collection("salts").createIndex("username");
+        });
+
+        this._database.createCollection("characters", (err, res) => {
+            this._database.collection("characters").createIndex("name");
+        });
     }
 
     public createAccount(username:string, password:string, accessLevel:number=1):Promise<string>{
@@ -102,5 +118,53 @@ export class DBController{
                 .then(result => result ? resolve(result) : reject(new Error("Salt not found.")))
                 .catch(err => reject(err));
         });
+    }
+
+    public createCharacter(accountID:number, archetypeID:number, name:string, skin:number=1):Promise<InsertOneWriteOpResult>{
+        let characterDoc:DBCharacterSchema = createDefaultCharacter(accountID, archetypeID, name, skin);
+        return this._database.collection("characters").insertOne(characterDoc);
+    }
+
+    public deleteCharacter(accountID:number, name:string):Promise<DeleteWriteOpResultObject>{
+        return this._database.collection("characters").deleteOne({account_id: accountID, name});
+    }
+
+    public getCharacter(accountID:number, name:string):Promise<DBCharacterSchema>{
+        return new Promise((resolve, reject) => {
+            this._database.collection("characters").findOne({accountID, name})
+                .then(data => {
+                    if(data){
+                        resolve(data as DBCharacterSchema);
+                    }
+                    else reject(new Error(`Character ${name} not found.`));
+                })
+                .catch(err => reject(err));
+        });
+    }
+
+    public getCharacterList(accountID:number):Promise<DBCharacterPreviewSchema[]>{
+        return new Promise((resolve, reject) => {
+            this._database.collection("characters").find({accountID}).toArray()
+                .then(results => {
+                    let previews:DBCharacterPreviewSchema[] = new Array<DBCharacterPreviewSchema>(results.length);
+
+                    results.forEach((result, index) => {
+                        previews[index] = {
+                            name:       result.name,
+                            map:        getMapName(result.map_id),
+                            archetype:  getArchetypeName(result.archetype_id),
+                            level:      result.level
+                        };
+                    });
+
+                    resolve(previews);
+                })
+                .catch(err => reject(err));
+        });
+    }
+
+    public updateCharacter(data:DBCharacterSchema):Promise<any>{
+        let name:string = data.name;
+        return this._database.collection("characters").findOneAndUpdate({name}, data);
     }
 }
