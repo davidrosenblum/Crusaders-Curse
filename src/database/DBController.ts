@@ -1,4 +1,4 @@
-import { Db, InsertOneWriteOpResult, DeleteWriteOpResultObject } from "mongodb";
+import { Db, InsertOneWriteOpResult, DeleteWriteOpResultObject, FindAndModifyWriteOpResultObject } from "mongodb";
 import { DBAccount } from "./DBAccount";
 import { DBAccountSchema, DBSaltSchema, DBCharacterSchema, DBCharacterPreviewSchema, createDefaultCharacter } from "./DBSchema";
 import { getArchetypeName, getMapName } from "../data/Data";
@@ -163,7 +163,7 @@ export class DBController{
         });
     }
 
-    public updateCharacter(data:DBCharacterSchema):Promise<any>{
+    public updateCharacter(data:DBCharacterSchema):Promise<FindAndModifyWriteOpResultObject>{
         let name:string = data.name;
         return this._database.collection("characters").findOneAndUpdate({name}, data);
     }

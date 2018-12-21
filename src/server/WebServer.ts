@@ -5,6 +5,7 @@ import * as https from "https";
 import { MongoClient } from "mongodb";
 import { SettingsUtils, SettingsConfig } from "../utils/SettingsUtils";
 import { DBController } from "../database/DBController";
+import { AccountCreateHandler } from './handlers/AccountCreateHandler';
 
 export class WebServer{
     private _httpServer:http.Server;
@@ -26,6 +27,8 @@ export class WebServer{
 
     private createRoutes():void{
         this._app.get("/", (req, res) => res.sendFile("index.html"));
+
+        this._app.post("/accounts/create", (req, res) => AccountCreateHandler.createAccount(this._database, req, res));
     }
 
     private async init():Promise<any>{
@@ -39,12 +42,12 @@ export class WebServer{
             let mongoDbName:string = process.env.MONGO_DB || this._settings.mongo_database.database_name;
             let mongoClient:MongoClient = await MongoClient.connect(mongoUri, {useNewUrlParser: true});
             this._database = new DBController(mongoClient.db(mongoDbName));
-            console.log("Connected to database.");
+            console.log("Database connected.\n");
 
             console.log("Starting server...");
-            let port:number = parseInt(process.env.PORT) || this._settings.https.port;
+            let port:number = parseInt(process.env.PORT) || this._settings.server.port;
             await this._httpServer.listen(port);
-            console.log(`Server listening on port ${port}.`);
+            console.log(`Server listening on port ${port}.\n`);
         }
         catch(err){
             console.log(err.message);

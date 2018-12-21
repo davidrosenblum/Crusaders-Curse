@@ -5,8 +5,11 @@ export interface SettingsConfig{
         uri:string;
         database_name:string;
     },
-    https: {
+    server: {
         port:number;
+    },
+    game: {
+        double_xp:boolean;
     }
 }
 
@@ -15,11 +18,14 @@ export class SettingsUtils{
 
     private static DEFAULTS:SettingsConfig = {
         mongo_database: {
-            uri: "localhost:27017",
+            uri: "mongodb://localhost:27017",
             database_name: "crusaders_curse"
         },
-        https: {
+        server: {
             port: 8080
+        },
+        game: {
+            double_xp: false
         }
     };
 
