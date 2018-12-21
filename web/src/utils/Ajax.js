@@ -19,7 +19,12 @@ export class Ajax{
                 }
             }
 
-            xhr.send(data);
+            if(data){
+                xhr.send(typeof data === "string" ? data : JSON.stringify(data));
+            }
+            else{
+                xhr.send();
+            }
         });
     }
 
