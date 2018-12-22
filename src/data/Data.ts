@@ -141,3 +141,20 @@ export const enum AttackType{
     MELEE =     1,
     RANGED =    2
 }
+
+export const enum NPCTier{
+    STANDARD =  1,
+    ELITE =     2,
+    BOSS =      3
+}
+
+export const enum Team{
+    KINGS_LEGION =  "kings-legion",
+    RAIDERS =       "raiders",
+    ORCS =          "orcs",
+    UNDEAD =        "undead",
+    DEMONS =        "demons",
+    SEPARATISTS =   "separatists",
+    CULTISTS =      "cultists",
+    IMPERIALS =     "imperials"
+}
