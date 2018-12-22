@@ -44,21 +44,45 @@ export declare const enum OpCode {
     OBJECT_CREATE = 11,
     OBJECT_DELETE = 12,
     OBJECT_UPDATE = 13,
-    EFFECT_CREATE = 14,
-    ABILITY_LIST = 15,
-    ABILITY_CAST = 16,
-    ABILITY_PURCHASE = 17,
-    POTION_LIST = 18,
-    POTION_CONSUME = 19,
-    POTION_PURCHASE = 20,
-    PARTY_INVITE = 21,
-    PARTY_ACCEPT = 21,
-    PARTY_DECLINE = 22,
-    PARTY_LEAVE = 23,
-    PARTY_UPDATE = 24
+    OBJECT_STATS = 14,
+    EFFECT_CREATE = 15,
+    ABILITY_LIST = 16,
+    ABILITY_CAST = 17,
+    ABILITY_PURCHASE = 18,
+    POTION_LIST = 19,
+    POTION_CONSUME = 20,
+    POTION_PURCHASE = 21,
+    PARTY_INVITE = 22,
+    PARTY_ACCEPT = 23,
+    PARTY_DECLINE = 24,
+    PARTY_LEAVE = 25,
+    PARTY_UPDATE = 26
 }
 export declare const enum Status {
     GOOD = 2,
     BAD = 4,
     ERR = 5
+}
+export declare const enum DamageType {
+    PHYSICAL = 1,
+    MAGICAL = 2
+}
+export declare const enum AttackType {
+    MELEE = 1,
+    RANGED = 2
+}
+export declare const enum NPCTier {
+    STANDARD = 1,
+    ELITE = 2,
+    BOSS = 3
+}
+export declare const enum Team {
+    KINGS_LEGION = "kings-legion",
+    RAIDERS = "raiders",
+    ORCS = "orcs",
+    UNDEAD = "undead",
+    DEMONS = "demons",
+    SEPARATISTS = "separatists",
+    CULTISTS = "cultists",
+    IMPERIALS = "imperials"
 }

@@ -1,0 +1,191 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var NPCsCollection = /** @class */ (function () {
+    function NPCsCollection() {
+    }
+    NPCsCollection.loadFromDatabase = function (database) {
+        return new Promise(function (resolve, reject) {
+            database.collection("npcs").find({}).toArray()
+                .then(function (results) { return resolve(results); })
+                .catch(function (err) { return reject(err); });
+        });
+    };
+    NPCsCollection.insertDefaults = function (database) {
+        return database.collection("npcs").insertMany(NPCsCollection.defaultNPCs);
+    };
+    NPCsCollection.defaultNPCs = [
+        {
+            type: "enforcer",
+            name: "Enforcer",
+            move_speed: 2,
+            team: "raiders" /* RAIDERS */,
+            tier: 1 /* STANDARD */,
+            health: { base: 32, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0.10, magical: 0 },
+            bounty: { xp: 5, gold: 2 },
+            abilities: {}
+        },
+        {
+            type: "arsonist",
+            name: "Arsonist",
+            move_speed: 2,
+            team: "raiders" /* RAIDERS */,
+            tier: 1 /* STANDARD */,
+            health: { base: 25, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0, magical: 0 },
+            bounty: { xp: 5, gold: 2 },
+            abilities: {}
+        },
+        {
+            type: "marauder",
+            name: "Marauder",
+            move_speed: 2,
+            team: "raiders" /* RAIDERS */,
+            tier: 2 /* ELITE */,
+            health: { base: 65, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0.25, magical: 0 },
+            bounty: { xp: 11, gold: 6 },
+            abilities: {}
+        },
+        {
+            type: "renegade-mage",
+            name: "Renegade Mage",
+            move_speed: 2,
+            team: "raiders" /* RAIDERS */,
+            tier: 2 /* ELITE */,
+            health: { base: 50, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0, magical: 0.33 },
+            bounty: { xp: 11, gold: 6 },
+            abilities: {}
+        },
+        {
+            type: "overseer",
+            name: "Overseer",
+            move_speed: 1,
+            team: "raiders" /* RAIDERS */,
+            tier: 3 /* BOSS */,
+            health: { base: 135, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0.10, ranged: 0.10 },
+            resistance: { physical: 0.25, magical: 0.15 },
+            bounty: { xp: 40, gold: 20 },
+            abilities: {}
+        },
+        {
+            type: "warrior",
+            name: "Warrior",
+            move_speed: 2,
+            team: "orcs" /* ORCS */,
+            tier: 1 /* STANDARD */,
+            health: { base: 40, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0.10 },
+            resistance: { physical: 0, magical: 0 },
+            bounty: { xp: 7, gold: 3 },
+            abilities: {}
+        },
+        {
+            type: "brute",
+            name: "Brute",
+            move_speed: 2,
+            team: "orcs" /* ORCS */,
+            tier: 2 /* ELITE */,
+            health: { base: 75, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0.10, ranged: 0.10 },
+            resistance: { physical: 0.33, magical: 0 },
+            bounty: { xp: 15, gold: 8 },
+            abilities: {}
+        },
+        {
+            type: "chieftain",
+            name: "Chieftain",
+            move_speed: 1,
+            team: "orcs" /* ORCS */,
+            tier: 3 /* BOSS */,
+            health: { base: 165, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0.10 },
+            resistance: { physical: 0.35, magical: 0 },
+            bounty: { xp: 50, gold: 30 },
+            abilities: {}
+        },
+        {
+            type: "reanimated-corpse",
+            name: "Reanimated Corpse",
+            move_speed: 2,
+            team: "undead" /* UNDEAD */,
+            tier: 1 /* STANDARD */,
+            health: { base: 75, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0.33, magical: 0 },
+            bounty: { xp: 10, gold: 5 },
+            abilities: {}
+        },
+        {
+            type: "animus",
+            name: "Animus",
+            move_speed: 2,
+            team: "undead" /* UNDEAD */,
+            tier: 1 /* STANDARD */,
+            health: { base: 65, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0, magical: 0.15 },
+            bounty: { xp: 10, gold: 5 },
+            abilities: {}
+        },
+        {
+            type: "grave-knight",
+            name: "Grave Knight",
+            move_speed: 2,
+            team: "undead" /* UNDEAD */,
+            tier: 2 /* ELITE */,
+            health: { base: 95, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0.25, magical: 0 },
+            bounty: { xp: 17, gold: 10 },
+            abilities: {}
+        },
+        {
+            type: "lich",
+            name: "Lich",
+            move_speed: 2,
+            team: "undead" /* UNDEAD */,
+            tier: 2 /* ELITE */,
+            health: { base: 65, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0, magical: 0.15 },
+            bounty: { xp: 17, gold: 10 },
+            abilities: {}
+        },
+        ,
+        {
+            type: "death-knight",
+            name: "Death Knight",
+            move_speed: 1,
+            team: "undead" /* UNDEAD */,
+            tier: 3 /* BOSS */,
+            health: { base: 200, regen: 0.02 },
+            mana: { base: 100, regen: 0.02 },
+            defense: { melee: 0, ranged: 0 },
+            resistance: { physical: 0, magical: 0.15 },
+            bounty: { xp: 60, gold: 40 },
+            abilities: {}
+        }
+    ];
+    return NPCsCollection;
+}());
+exports.NPCsCollection = NPCsCollection;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiTlBDc0NvbGxlY3Rpb24uanMiLCJzb3VyY2VSb290Ijoic3JjLyoqLyoudHMvIiwic291cmNlcyI6WyJkYXRhYmFzZS9jb2xsZWN0aW9ucy9OUENzQ29sbGVjdGlvbi50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQWlCQTtJQUFBO0lBeUxBLENBQUM7SUF4TGlCLCtCQUFnQixHQUE5QixVQUErQixRQUFXO1FBQ3RDLE9BQU8sSUFBSSxPQUFPLENBQUMsVUFBQyxPQUFPLEVBQUUsTUFBTTtZQUMvQixRQUFRLENBQUMsVUFBVSxDQUFDLE1BQU0sQ0FBQyxDQUFDLElBQUksQ0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPLEVBQUU7aUJBQ3pDLElBQUksQ0FBQyxVQUFBLE9BQU8sSUFBSSxPQUFBLE9BQU8sQ0FBQyxPQUFPLENBQUMsRUFBaEIsQ0FBZ0IsQ0FBQztpQkFDakMsS0FBSyxDQUFDLFVBQUEsR0FBRyxJQUFJLE9BQUEsTUFBTSxDQUFDLEdBQUcsQ0FBQyxFQUFYLENBQVcsQ0FBQyxDQUFDO1FBQ25DLENBQUMsQ0FBQyxDQUFDO0lBQ1AsQ0FBQztJQUVhLDZCQUFjLEdBQTVCLFVBQTZCLFFBQVc7UUFDcEMsT0FBTyxRQUFRLENBQUMsVUFBVSxDQUFDLE1BQU0sQ0FBQyxDQUFDLFVBQVUsQ0FBQyxjQUFjLENBQUMsV0FBVyxDQUFDLENBQUE7SUFDN0UsQ0FBQztJQUVjLDBCQUFXLEdBQWlCO1FBQ3ZDO1lBQ0ksSUFBSSxFQUFZLFVBQVU7WUFDMUIsSUFBSSxFQUFZLFVBQVU7WUFDMUIsVUFBVSxFQUFNLENBQUM7WUFDakIsSUFBSSx5QkFBd0I7WUFDNUIsSUFBSSxrQkFBNEI7WUFDaEMsTUFBTSxFQUFVLEVBQUMsSUFBSSxFQUFFLEVBQUUsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3ZDLElBQUksRUFBWSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxPQUFPLEVBQVMsRUFBQyxLQUFLLEVBQUUsQ0FBQyxFQUFFLE1BQU0sRUFBRSxDQUFDLEVBQUM7WUFDckMsVUFBVSxFQUFNLEVBQUMsUUFBUSxFQUFFLElBQUksRUFBRSxPQUFPLEVBQUUsQ0FBQyxFQUFDO1lBQzVDLE1BQU0sRUFBVSxFQUFDLEVBQUUsRUFBRSxDQUFDLEVBQUUsSUFBSSxFQUFFLENBQUMsRUFBQztZQUNoQyxTQUFTLEVBQU8sRUFBRTtTQUNyQjtRQUNEO1lBQ0ksSUFBSSxFQUFZLFVBQVU7WUFDMUIsSUFBSSxFQUFZLFVBQVU7WUFDMUIsVUFBVSxFQUFNLENBQUM7WUFDakIsSUFBSSx5QkFBd0I7WUFDNUIsSUFBSSxrQkFBNEI7WUFDaEMsTUFBTSxFQUFVLEVBQUMsSUFBSSxFQUFFLEVBQUUsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3ZDLElBQUksRUFBWSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxPQUFPLEVBQVMsRUFBQyxLQUFLLEVBQUUsQ0FBQyxFQUFFLE1BQU0sRUFBRSxDQUFDLEVBQUM7WUFDckMsVUFBVSxFQUFNLEVBQUMsUUFBUSxFQUFFLENBQUMsRUFBRSxPQUFPLEVBQUUsQ0FBQyxFQUFDO1lBQ3pDLE1BQU0sRUFBVSxFQUFDLEVBQUUsRUFBRSxDQUFDLEVBQUUsSUFBSSxFQUFFLENBQUMsRUFBQztZQUNoQyxTQUFTLEVBQU8sRUFBRTtTQUNyQjtRQUNEO1lBQ0ksSUFBSSxFQUFZLFVBQVU7WUFDMUIsSUFBSSxFQUFZLFVBQVU7WUFDMUIsVUFBVSxFQUFNLENBQUM7WUFDakIsSUFBSSx5QkFBd0I7WUFDNUIsSUFBSSxlQUF5QjtZQUM3QixNQUFNLEVBQVUsRUFBQyxJQUFJLEVBQUUsRUFBRSxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDdkMsSUFBSSxFQUFZLEVBQUMsSUFBSSxFQUFFLEdBQUcsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLE9BQU8sRUFBUyxFQUFDLEtBQUssRUFBRSxDQUFDLEVBQUUsTUFBTSxFQUFFLENBQUMsRUFBQztZQUNyQyxVQUFVLEVBQU0sRUFBQyxRQUFRLEVBQUUsSUFBSSxFQUFFLE9BQU8sRUFBRSxDQUFDLEVBQUM7WUFDNUMsTUFBTSxFQUFVLEVBQUMsRUFBRSxFQUFFLEVBQUUsRUFBRSxJQUFJLEVBQUUsQ0FBQyxFQUFDO1lBQ2pDLFNBQVMsRUFBTyxFQUFFO1NBQ3JCO1FBQ0Q7WUFDSSxJQUFJLEVBQVksZUFBZTtZQUMvQixJQUFJLEVBQVksZUFBZTtZQUMvQixVQUFVLEVBQU0sQ0FBQztZQUNqQixJQUFJLHlCQUF3QjtZQUM1QixJQUFJLGVBQXlCO1lBQzdCLE1BQU0sRUFBVSxFQUFDLElBQUksRUFBRSxFQUFFLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN2QyxJQUFJLEVBQVksRUFBQyxJQUFJLEVBQUUsR0FBRyxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDeEMsT0FBTyxFQUFTLEVBQUMsS0FBSyxFQUFFLENBQUMsRUFBRSxNQUFNLEVBQUUsQ0FBQyxFQUFDO1lBQ3JDLFVBQVUsRUFBTSxFQUFDLFFBQVEsRUFBRSxDQUFDLEVBQUUsT0FBTyxFQUFFLElBQUksRUFBQztZQUM1QyxNQUFNLEVBQVUsRUFBQyxFQUFFLEVBQUUsRUFBRSxFQUFFLElBQUksRUFBRSxDQUFDLEVBQUM7WUFDakMsU0FBUyxFQUFPLEVBQUU7U0FDckI7UUFDRDtZQUNJLElBQUksRUFBWSxVQUFVO1lBQzFCLElBQUksRUFBWSxVQUFVO1lBQzFCLFVBQVUsRUFBTSxDQUFDO1lBQ2pCLElBQUkseUJBQXdCO1lBQzVCLElBQUksY0FBd0I7WUFDNUIsTUFBTSxFQUFVLEVBQUMsSUFBSSxFQUFFLEdBQUcsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLElBQUksRUFBWSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxPQUFPLEVBQVMsRUFBQyxLQUFLLEVBQUUsSUFBSSxFQUFFLE1BQU0sRUFBRSxJQUFJLEVBQUM7WUFDM0MsVUFBVSxFQUFNLEVBQUMsUUFBUSxFQUFFLElBQUksRUFBRSxPQUFPLEVBQUUsSUFBSSxFQUFDO1lBQy9DLE1BQU0sRUFBVSxFQUFDLEVBQUUsRUFBRSxFQUFFLEVBQUUsSUFBSSxFQUFFLEVBQUUsRUFBQztZQUNsQyxTQUFTLEVBQU8sRUFBRTtTQUNyQjtRQUNEO1lBQ0ksSUFBSSxFQUFZLFNBQVM7WUFDekIsSUFBSSxFQUFZLFNBQVM7WUFDekIsVUFBVSxFQUFNLENBQUM7WUFDakIsSUFBSSxtQkFBcUI7WUFDekIsSUFBSSxrQkFBNEI7WUFDaEMsTUFBTSxFQUFVLEVBQUMsSUFBSSxFQUFFLEVBQUUsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3ZDLElBQUksRUFBWSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxPQUFPLEVBQVMsRUFBQyxLQUFLLEVBQUUsQ0FBQyxFQUFFLE1BQU0sRUFBRSxJQUFJLEVBQUM7WUFDeEMsVUFBVSxFQUFNLEVBQUMsUUFBUSxFQUFFLENBQUMsRUFBRSxPQUFPLEVBQUUsQ0FBQyxFQUFDO1lBQ3pDLE1BQU0sRUFBVSxFQUFDLEVBQUUsRUFBRSxDQUFDLEVBQUUsSUFBSSxFQUFFLENBQUMsRUFBQztZQUNoQyxTQUFTLEVBQU8sRUFBRTtTQUNyQjtRQUNEO1lBQ0ksSUFBSSxFQUFZLE9BQU87WUFDdkIsSUFBSSxFQUFZLE9BQU87WUFDdkIsVUFBVSxFQUFNLENBQUM7WUFDakIsSUFBSSxtQkFBcUI7WUFDekIsSUFBSSxlQUF5QjtZQUM3QixNQUFNLEVBQVUsRUFBQyxJQUFJLEVBQUUsRUFBRSxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDdkMsSUFBSSxFQUFZLEVBQUMsSUFBSSxFQUFFLEdBQUcsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLE9BQU8sRUFBUyxFQUFDLEtBQUssRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFLElBQUksRUFBQztZQUMzQyxVQUFVLEVBQU0sRUFBQyxRQUFRLEVBQUUsSUFBSSxFQUFFLE9BQU8sRUFBRSxDQUFDLEVBQUM7WUFDNUMsTUFBTSxFQUFVLEVBQUMsRUFBRSxFQUFFLEVBQUUsRUFBRSxJQUFJLEVBQUUsQ0FBQyxFQUFDO1lBQ2pDLFNBQVMsRUFBTyxFQUFFO1NBQ3JCO1FBQ0Q7WUFDSSxJQUFJLEVBQVksV0FBVztZQUMzQixJQUFJLEVBQVksV0FBVztZQUMzQixVQUFVLEVBQU0sQ0FBQztZQUNqQixJQUFJLG1CQUFxQjtZQUN6QixJQUFJLGNBQXdCO1lBQzVCLE1BQU0sRUFBVSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxJQUFJLEVBQVksRUFBQyxJQUFJLEVBQUUsR0FBRyxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDeEMsT0FBTyxFQUFTLEVBQUMsS0FBSyxFQUFFLENBQUMsRUFBRSxNQUFNLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLFVBQVUsRUFBTSxFQUFDLFFBQVEsRUFBRSxJQUFJLEVBQUUsT0FBTyxFQUFFLENBQUMsRUFBQztZQUM1QyxNQUFNLEVBQVUsRUFBQyxFQUFFLEVBQUUsRUFBRSxFQUFFLElBQUksRUFBRSxFQUFFLEVBQUM7WUFDbEMsU0FBUyxFQUFPLEVBQUU7U0FDckI7UUFDRDtZQUNJLElBQUksRUFBWSxtQkFBbUI7WUFDbkMsSUFBSSxFQUFZLG1CQUFtQjtZQUNuQyxVQUFVLEVBQU0sQ0FBQztZQUNqQixJQUFJLHVCQUF1QjtZQUMzQixJQUFJLGtCQUE0QjtZQUNoQyxNQUFNLEVBQVUsRUFBQyxJQUFJLEVBQUUsRUFBRSxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDdkMsSUFBSSxFQUFZLEVBQUMsSUFBSSxFQUFFLEdBQUcsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLE9BQU8sRUFBUyxFQUFDLEtBQUssRUFBRSxDQUFDLEVBQUUsTUFBTSxFQUFFLENBQUMsRUFBQztZQUNyQyxVQUFVLEVBQU0sRUFBQyxRQUFRLEVBQUUsSUFBSSxFQUFFLE9BQU8sRUFBRSxDQUFDLEVBQUM7WUFDNUMsTUFBTSxFQUFVLEVBQUMsRUFBRSxFQUFFLEVBQUUsRUFBRSxJQUFJLEVBQUUsQ0FBQyxFQUFDO1lBQ2pDLFNBQVMsRUFBTyxFQUFFO1NBQ3JCO1FBQ0Q7WUFDSSxJQUFJLEVBQVksUUFBUTtZQUN4QixJQUFJLEVBQVksUUFBUTtZQUN4QixVQUFVLEVBQU0sQ0FBQztZQUNqQixJQUFJLHVCQUF1QjtZQUMzQixJQUFJLGtCQUE0QjtZQUNoQyxNQUFNLEVBQVUsRUFBQyxJQUFJLEVBQUUsRUFBRSxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDdkMsSUFBSSxFQUFZLEVBQUMsSUFBSSxFQUFFLEdBQUcsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLE9BQU8sRUFBUyxFQUFDLEtBQUssRUFBRSxDQUFDLEVBQUUsTUFBTSxFQUFFLENBQUMsRUFBQztZQUNyQyxVQUFVLEVBQU0sRUFBQyxRQUFRLEVBQUUsQ0FBQyxFQUFFLE9BQU8sRUFBRSxJQUFJLEVBQUM7WUFDNUMsTUFBTSxFQUFVLEVBQUMsRUFBRSxFQUFFLEVBQUUsRUFBRSxJQUFJLEVBQUUsQ0FBQyxFQUFDO1lBQ2pDLFNBQVMsRUFBTyxFQUFFO1NBQ3JCO1FBQ0Q7WUFDSSxJQUFJLEVBQVksY0FBYztZQUM5QixJQUFJLEVBQVksY0FBYztZQUM5QixVQUFVLEVBQU0sQ0FBQztZQUNqQixJQUFJLHVCQUF1QjtZQUMzQixJQUFJLGVBQXlCO1lBQzdCLE1BQU0sRUFBVSxFQUFDLElBQUksRUFBRSxFQUFFLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN2QyxJQUFJLEVBQVksRUFBQyxJQUFJLEVBQUUsR0FBRyxFQUFFLEtBQUssRUFBRSxJQUFJLEVBQUM7WUFDeEMsT0FBTyxFQUFTLEVBQUMsS0FBSyxFQUFFLENBQUMsRUFBRSxNQUFNLEVBQUUsQ0FBQyxFQUFDO1lBQ3JDLFVBQVUsRUFBTSxFQUFDLFFBQVEsRUFBRSxJQUFJLEVBQUUsT0FBTyxFQUFFLENBQUMsRUFBQztZQUM1QyxNQUFNLEVBQVUsRUFBQyxFQUFFLEVBQUUsRUFBRSxFQUFFLElBQUksRUFBRSxFQUFFLEVBQUM7WUFDbEMsU0FBUyxFQUFPLEVBQUU7U0FDckI7UUFDRDtZQUNJLElBQUksRUFBWSxNQUFNO1lBQ3RCLElBQUksRUFBWSxNQUFNO1lBQ3RCLFVBQVUsRUFBTSxDQUFDO1lBQ2pCLElBQUksdUJBQXVCO1lBQzNCLElBQUksZUFBeUI7WUFDN0IsTUFBTSxFQUFVLEVBQUMsSUFBSSxFQUFFLEVBQUUsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3ZDLElBQUksRUFBWSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxPQUFPLEVBQVMsRUFBQyxLQUFLLEVBQUUsQ0FBQyxFQUFFLE1BQU0sRUFBRSxDQUFDLEVBQUM7WUFDckMsVUFBVSxFQUFNLEVBQUMsUUFBUSxFQUFFLENBQUMsRUFBRSxPQUFPLEVBQUUsSUFBSSxFQUFDO1lBQzVDLE1BQU0sRUFBVSxFQUFDLEVBQUUsRUFBRSxFQUFFLEVBQUUsSUFBSSxFQUFFLEVBQUUsRUFBQztZQUNsQyxTQUFTLEVBQU8sRUFBRTtTQUNyQjtRQUNELEFBREU7UUFFRjtZQUNJLElBQUksRUFBWSxjQUFjO1lBQzlCLElBQUksRUFBWSxjQUFjO1lBQzlCLFVBQVUsRUFBTSxDQUFDO1lBQ2pCLElBQUksdUJBQXVCO1lBQzNCLElBQUksY0FBd0I7WUFDNUIsTUFBTSxFQUFVLEVBQUMsSUFBSSxFQUFFLEdBQUcsRUFBRSxLQUFLLEVBQUUsSUFBSSxFQUFDO1lBQ3hDLElBQUksRUFBWSxFQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsS0FBSyxFQUFFLElBQUksRUFBQztZQUN4QyxPQUFPLEVBQVMsRUFBQyxLQUFLLEVBQUUsQ0FBQyxFQUFFLE1BQU0sRUFBRSxDQUFDLEVBQUM7WUFDckMsVUFBVSxFQUFNLEVBQUMsUUFBUSxFQUFFLENBQUMsRUFBRSxPQUFPLEVBQUUsSUFBSSxFQUFDO1lBQzVDLE1BQU0sRUFBVSxFQUFDLEVBQUUsRUFBRSxFQUFFLEVBQUUsSUFBSSxFQUFFLEVBQUUsRUFBQztZQUNsQyxTQUFTLEVBQU8sRUFBRTtTQUNyQjtLQUNKLENBQUM7SUFDTixxQkFBQztDQUFBLEFBekxELElBeUxDO0FBekxZLHdDQUFjIn0=
