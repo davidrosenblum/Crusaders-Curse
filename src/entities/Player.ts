@@ -1,5 +1,5 @@
 import { CasterObject, CasterObjectConfig } from "./CasterObject";
-import { DBCharacterSchema } from "../database/Schemas";
+import { CharacterDocument } from "../database/collections/CharactersCollection";
 import { Archetype, getArchetypeName } from "../data/Data";
 
 export interface PlayerConfig extends CasterObjectConfig{
@@ -17,7 +17,7 @@ export class Player extends CasterObject{
     private _abilityPoints:number;
     private _archetype:string;
 
-    private constructor(saveData:DBCharacterSchema, config:PlayerConfig){
+    private constructor(saveData:CharacterDocument, config:PlayerConfig){
         super(config);
 
         this._level = 1;
@@ -81,7 +81,7 @@ export class Player extends CasterObject{
         return this._abilityPoints;
     }
 
-    public static createRanger(saveData:DBCharacterSchema):Player{
+    public static createRanger(saveData:CharacterDocument):Player{
         return new Player(saveData, {
             name: saveData.name,
             type: "player",
