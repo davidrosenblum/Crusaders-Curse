@@ -52,15 +52,15 @@ export abstract class GameObject extends EventEmitter{
         super();
 
         this._objectID = GameObject.tokenGen.nextToken();
-        this._teamID = config.teamID || null;
         this._name = config.name;
         this._type = config.type;
-        this._x = config.x || 0;
-        this._y = config.y || 0;
-        this._anim = config.anim || null;
-        this._facing = config.facing || "right";
-        this._moveSpeed = Math.abs(config.moveSpeed) || 1;
-        this._stunned = false;
+        this.teamID = config.teamID || null;
+        this.x = config.x || 0;
+        this.y = config.y || 0;
+        this.anim = config.anim || null;
+        this.facing = config.facing || "right";
+        this.moveSpeed = 1;
+        this.isStunned = false;
     }
 
     public setState(state:GameObjectState):void{
