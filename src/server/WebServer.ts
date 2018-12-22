@@ -39,7 +39,7 @@ export class WebServer{
         this._clients[client.clientID] = client;
 
         conn.on("message", data => {
-            GameClient.processRequest(data, this.handlClientRequest.bind(this));
+            GameClient.parseRequests(data, this.handlClientRequest.bind(this));
         });
 
         conn.on("error", err => {
