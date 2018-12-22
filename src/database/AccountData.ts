@@ -1,12 +1,12 @@
-import { DBAccountSchema } from "./DBSchema";
-
-export class DBAccount{
+export class AccountData{
     private _accountID:number;
     private _username:string;
+    private _accessLevel:number;
 
-    constructor(accountID:number, username:string){
+    constructor(accountID:number, username:string, accessLevel:number){
         this._accountID = accountID;
         this._username = username;
+        this._accessLevel = accessLevel;
     }
 
     public get accountID():number{
@@ -15,5 +15,9 @@ export class DBAccount{
 
     public get username():string{
         return this._username;
+    }
+
+    public get accessLevel():number{
+        return this._accessLevel;
     }
 }
