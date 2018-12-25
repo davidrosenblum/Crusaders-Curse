@@ -7,14 +7,14 @@ export interface GameObjectConfig {
     x?: number;
     y?: number;
     anim?: string;
-    facing?: string;
+    facing?: Facing;
     moveSpeed?: number;
 }
 export interface GameObjectState {
     x?: number;
     y?: number;
     anim?: string;
-    facing?: string;
+    facing?: Facing;
     moveSpeed?: number;
     stunned?: boolean;
 }
@@ -26,9 +26,15 @@ export interface GameObjectFullState {
     x: number;
     y: number;
     anim: string;
-    facing: string;
+    facing: Facing;
     moveSpeed: number;
     stunned: boolean;
+}
+export declare const enum Facing {
+    UP = "up",
+    DOWN = "down",
+    LEFT = "left",
+    RIGHT = "right"
 }
 export declare abstract class GameObject extends EventEmitter {
     private static tokenGen;
@@ -49,7 +55,7 @@ export declare abstract class GameObject extends EventEmitter {
     x: number;
     y: number;
     anim: string;
-    facing: string;
+    facing: Facing;
     moveSpeed: number;
     isStunned: boolean;
     readonly objectID: string;

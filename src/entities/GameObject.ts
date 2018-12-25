@@ -8,7 +8,7 @@ export interface GameObjectConfig{
     x?:number;
     y?:number;
     anim?:string;
-    facing?:string;
+    facing?:Facing;
     moveSpeed?:number;
 }
 
@@ -16,7 +16,7 @@ export interface GameObjectState{
     x?:number;
     y?:number;
     anim?:string;
-    facing?:string;
+    facing?:Facing;
     moveSpeed?:number;
     stunned?:boolean;
 }
@@ -29,9 +29,16 @@ export interface GameObjectFullState{
     x:number;
     y:number;
     anim:string;
-    facing:string;
+    facing:Facing;
     moveSpeed:number;
     stunned:boolean;
+}
+
+export const enum Facing{
+    UP =    "up",
+    DOWN =  "down",
+    LEFT =  "left",
+    RIGHT = "right"
 }
 
 export abstract class GameObject extends EventEmitter{
@@ -44,7 +51,7 @@ export abstract class GameObject extends EventEmitter{
     private _x:number;
     private _y:number;
     private _anim:string;
-    private _facing:string;
+    private _facing:Facing;
     private _moveSpeed:number;
     private _stunned:boolean;
 
@@ -58,7 +65,7 @@ export abstract class GameObject extends EventEmitter{
         this.x = config.x || 0;
         this.y = config.y || 0;
         this.anim = config.anim || null;
-        this.facing = config.facing || "right";
+        this.facing = config.facing || Facing.DOWN;
         this.moveSpeed = 1;
         this.isStunned = false;
     }
@@ -117,7 +124,7 @@ export abstract class GameObject extends EventEmitter{
         this.emit("update", {anim});
     }
 
-    public set facing(facing:string){
+    public set facing(facing:Facing){
         this._facing = facing;
         this.emit("update", {facing});
     }
@@ -160,7 +167,7 @@ export abstract class GameObject extends EventEmitter{
         return this._anim;
     }
 
-    public get facing():string{
+    public get facing():Facing{
         return this._facing;
     }
 

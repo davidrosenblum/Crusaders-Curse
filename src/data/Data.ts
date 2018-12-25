@@ -1,3 +1,5 @@
+import { MAP_DATA } from "./MapData";
+
 export const enum Archetype{
     KNIGHT =            10,
     CRUSADER =          11,
@@ -44,7 +46,7 @@ export const enum Map{
     THE_SCHISM =          6
 };
 
-export function getMapName(id:number):string{
+export const getMapName = function(id:number):string{
     switch(id){
         case Map.CITY_OF_KINGS:
             return "City of Kings";
@@ -63,6 +65,17 @@ export function getMapName(id:number):string{
     }
 }
 
+export interface MapData{
+    tileSize:number,
+    background:number[][],
+    midground:number[][],
+    foreground?:number[][]
+}
+
+export const getMapData = function(id:number):MapData{
+    return MAP_DATA[id] || null;
+}
+
 export const enum Instance{
     RAIDER_ENCAMPMENT = 1,
     ORC_STRONGHOLD =    2,
@@ -74,7 +87,7 @@ export const enum Instance{
     DEEP_MINES =        8
 }
 
-export function getInstanceName(id:number):string{
+export const getInstanceName = function(id:number):string{
     switch(id){
         case Instance.RAIDER_ENCAMPMENT:
             return "Raider Encampment";
@@ -158,11 +171,4 @@ export const enum Team{
     SEPARATISTS =   "separatists",
     CULTISTS =      "cultists",
     IMPERIALS =     "imperials"
-}
-
-export const enum Facing{
-    UP =    "up",
-    DOWN =  "down",
-    LEFT =  "left",
-    RIGHT = "right"
 }
