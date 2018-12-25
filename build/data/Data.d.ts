@@ -87,3 +87,9 @@ export declare const enum Team {
     CULTISTS = "cultists",
     IMPERIALS = "imperials"
 }
+export declare const enum Facing {
+    UP = "up",
+    DOWN = "down",
+    LEFT = "left",
+    RIGHT = "right"
+}

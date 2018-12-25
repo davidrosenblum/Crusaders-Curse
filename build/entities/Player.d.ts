@@ -12,7 +12,8 @@ export declare class Player extends CasterObject {
     private _gold;
     private _abilityPoints;
     private _archetype;
-    private constructor();
+    constructor(saveData: CharacterDocument, config: PlayerConfig);
+    private calcXPNeeded;
     private levelUp;
     addAbilityPoints(points: number): void;
     addXP(xp: number): void;
@@ -23,5 +24,5 @@ export declare class Player extends CasterObject {
     readonly xpNeeded: number;
     readonly gold: number;
     readonly abilityPoints: number;
-    static createRanger(saveData: CharacterDocument): Player;
+    readonly archetype: string;
 }

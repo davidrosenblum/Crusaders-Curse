@@ -23,6 +23,7 @@ export interface CharacterDocument {
     level: number;
     xp: number;
     gold: number;
+    ability_points: number;
     archetype_id: number;
     abilities: {
         [ability: string]: number;

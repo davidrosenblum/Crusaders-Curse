@@ -17,20 +17,26 @@ export class Player extends CasterObject{
     private _abilityPoints:number;
     private _archetype:string;
 
-    private constructor(saveData:CharacterDocument, config:PlayerConfig){
+    constructor(saveData:CharacterDocument, config:PlayerConfig){
         super(config);
 
-        this._level = 1;
-        this._xp = 0;
-        this._gold = 0;
-        this._abilityPoints = 0;
+        this._level = Math.min(0, Math.max(saveData.level, Player.LEVEL_CAP));
+        this._xpNeeded = this.calcXPNeeded();
+        this._xp = Math.min(0, Math.max(saveData.xp, this._xpNeeded));
+        this._gold = Math.min(0, Math.max(saveData.gold, Player.GOLD_CAP));
+        this._abilityPoints = Math.min(0, Math.max(saveData.ability_points, Player.LEVEL_CAP - this.level - 1));
+        this._archetype = config.archetype;
+    }
+
+    private calcXPNeeded():number{
+        return (this.level + 1) * (this.level + 2);
     }
 
     private levelUp():void{
         if(this.level < Player.LEVEL_CAP){
+            this._level++;
             this._xpNeeded = (this.level + 1) * (this.level + 2);
             this._xp = 0;
-            this._level++;
             this.addAbilityPoints(1);
             this.emit("level", {level: this.level});
         }
@@ -43,6 +49,8 @@ export class Player extends CasterObject{
 
     public addXP(xp:number):void{
         let xpRemaining:number = xp;
+
+        this.emit("xp", {xp});
 
         while(xpRemaining >= this.xpToGo){
             xpRemaining -= this.xpToGo;
@@ -81,14 +89,7 @@ export class Player extends CasterObject{
         return this._abilityPoints;
     }
 
-    public static createRanger(saveData:CharacterDocument):Player{
-        return new Player(saveData, {
-            name: saveData.name,
-            type: "player",
-            archetype: getArchetypeName(Archetype.RANGER),
-            health: 100,
-            mana: 100,
-            moveSpeed: 1,
-        });
+    public get archetype():string{
+        return this._archetype;
     }
 }

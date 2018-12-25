@@ -14,5 +14,8 @@ export declare class GameManager {
     private processLogin;
     private processLogout;
     private processCharacterList;
+    private processCharacterCreate;
+    private processCharacterSelect;
+    private loadPlayer;
     readonly numClients: number;
 }

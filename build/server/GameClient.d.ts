@@ -18,12 +18,16 @@ export declare class GameClient {
     private _conn;
     private _clientID;
     private _accountData;
+    private _playerName;
     player: Player;
     constructor(connection: websocket.connection);
     send(opCode: OpCode, data?: any, status?: Status): void;
     setAccountData(accountData: AccountData): void;
+    setPlayerName(playerName: string): void;
     readonly username: string;
+    readonly accountID: number;
     readonly hasAccountData: boolean;
+    readonly playerName: string;
     readonly clientID: string;
     static parseRequests(client: GameClient, message: websocket.IMessage, handler: (req: GameClientRequest) => any): void;
 }

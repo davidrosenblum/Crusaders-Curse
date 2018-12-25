@@ -17,9 +17,23 @@ var CombatObject_1 = require("./CombatObject");
 var CasterObject = /** @class */ (function (_super) {
     __extends(CasterObject, _super);
     function CasterObject(config) {
-        return _super.call(this, config) || this;
+        var _this = _super.call(this, config) || this;
+        _this._abilities = {};
+        for (var ability in config.abilities) {
+            _this.learnAbility(ability, config.abilities[ability]);
+        }
+        return _this;
     }
+    CasterObject.prototype.learnAbility = function (abilityName, level) {
+        if (level === void 0) { level = 1; }
+        if (!this.hasAbility(abilityName)) {
+            this._abilities[abilityName] = null; // instantiate spell here! 
+        }
+    };
+    CasterObject.prototype.hasAbility = function (abilityName) {
+        return abilityName in this._abilities;
+    };
     return CasterObject;
 }(CombatObject_1.CombatObject));
 exports.CasterObject = CasterObject;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ2FzdGVyT2JqZWN0LmpzIiwic291cmNlUm9vdCI6InNyYy8qKi8qLnRzLyIsInNvdXJjZXMiOlsiZW50aXRpZXMvQ2FzdGVyT2JqZWN0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7OztBQUFBLCtDQUFrRTtBQU1sRTtJQUEyQyxnQ0FBWTtJQUNuRCxzQkFBWSxNQUF5QjtlQUNqQyxrQkFBTSxNQUFNLENBQUM7SUFDakIsQ0FBQztJQUNMLG1CQUFDO0FBQUQsQ0FBQyxBQUpELENBQTJDLDJCQUFZLEdBSXREO0FBSnFCLG9DQUFZIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ2FzdGVyT2JqZWN0LmpzIiwic291cmNlUm9vdCI6InNyYy8qKi8qLnRzLyIsInNvdXJjZXMiOlsiZW50aXRpZXMvQ2FzdGVyT2JqZWN0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7OztBQUFBLCtDQUFrRTtBQU1sRTtJQUEyQyxnQ0FBWTtJQUduRCxzQkFBWSxNQUF5QjtRQUFyQyxZQUNJLGtCQUFNLE1BQU0sQ0FBQyxTQU9oQjtRQUxHLEtBQUksQ0FBQyxVQUFVLEdBQUcsRUFBRSxDQUFDO1FBRXJCLEtBQUksSUFBSSxPQUFPLElBQUksTUFBTSxDQUFDLFNBQVMsRUFBQztZQUNoQyxLQUFJLENBQUMsWUFBWSxDQUFDLE9BQU8sRUFBRSxNQUFNLENBQUMsU0FBUyxDQUFDLE9BQU8sQ0FBQyxDQUFDLENBQUM7U0FDekQ7O0lBQ0wsQ0FBQztJQUVNLG1DQUFZLEdBQW5CLFVBQW9CLFdBQWtCLEVBQUUsS0FBYztRQUFkLHNCQUFBLEVBQUEsU0FBYztRQUNsRCxJQUFHLENBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxXQUFXLENBQUMsRUFBQztZQUM3QixJQUFJLENBQUMsVUFBVSxDQUFDLFdBQVcsQ0FBQyxHQUFHLElBQUksQ0FBQyxDQUFDLDJCQUEyQjtTQUNuRTtJQUNMLENBQUM7SUFFTSxpQ0FBVSxHQUFqQixVQUFrQixXQUFrQjtRQUNoQyxPQUFPLFdBQVcsSUFBSSxJQUFJLENBQUMsVUFBVSxDQUFDO0lBQzFDLENBQUM7SUFDTCxtQkFBQztBQUFELENBQUMsQUF0QkQsQ0FBMkMsMkJBQVksR0FzQnREO0FBdEJxQixvQ0FBWSJ9
