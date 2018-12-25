@@ -56,7 +56,8 @@ export declare const enum OpCode {
     PARTY_ACCEPT = 23,
     PARTY_DECLINE = 24,
     PARTY_LEAVE = 25,
-    PARTY_UPDATE = 26
+    PARTY_UPDATE = 26,
+    INVALID_OPCODE = 99
 }
 export declare const enum Status {
     GOOD = 2,
