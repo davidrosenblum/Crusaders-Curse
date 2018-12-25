@@ -1,5 +1,5 @@
 import { CombatObject, CombatObjectConfig } from "./CombatObject";
-import { MapInstance } from "../maps/MapInstance";
+import { GameMap } from "../maps/GameMap";
 
 export interface CasterObjectConfig extends CombatObjectConfig{
     abilities:{[ability:string]: number};
@@ -7,7 +7,7 @@ export interface CasterObjectConfig extends CombatObjectConfig{
 
 export abstract class CasterObject extends CombatObject{
     private _abilities:{[abiliy:string]: number};
-    private _map:MapInstance;
+    private _map:GameMap;
 
     constructor(config:CasterObjectConfig){
         super(config);
@@ -31,13 +31,13 @@ export abstract class CasterObject extends CombatObject{
         return abilityName in this._abilities;
     }
 
-    public setMap(map:MapInstance):void{
+    public setMap(map:GameMap):void{
         if(map.addUnit(this)){
             this._map = map;
         }
     }
 
-    public get map():MapInstance{
+    public get map():GameMap{
         return this._map;
     }
 }

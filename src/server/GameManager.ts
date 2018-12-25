@@ -4,8 +4,10 @@ import { OpCode, Status, Archetype } from "../data/Data";
 import { DBController } from "../database/DBController";
 import { Player } from "../entities/Player";
 import { PlayerFactory } from "../entities/PlayerFactory";
-import { MapInstance } from "../maps/MapInstance";
 import { CharacterDocument } from "../database/collections/CharactersCollection";
+import { GameMapFactory } from "../maps/GameMapFactory";
+import { GameMapOpen } from "../maps/GameMapOpen";
+import { GameMapInstance } from "../maps/GameMapInstance";
 
 export class GameManager{
     public static readonly CLIENT_VERSION_REQUIRED:string = "0.1.0";
@@ -14,7 +16,8 @@ export class GameManager{
     private _accounts:{[username:string]: GameClient};
     private _clients:{[id:string]: GameClient};
     private _numClients:number;
-    private _maps:{[id:number]: MapInstance};
+    private _maps:{[id:number]: GameMapOpen};
+    private _instances:{[id:number]: GameMapInstance};
 
     constructor(database:DBController){
         this._database = database;
@@ -22,6 +25,7 @@ export class GameManager{
         this._clients = {};
         this._numClients = 0;
         this._maps = {};
+        this._instances = {};
     }
 
     public createClient(conn:websocket.connection):void{
@@ -61,6 +65,18 @@ export class GameManager{
                 break;
             case OpCode.CHARACTER_LIST:
                 this.processCharacterList(client);
+                break;
+            case OpCode.CHARACTER_CREATE:
+                this.processCharacterCreate(client, data);
+                break;
+            case OpCode.CHARACTER_SELECT:
+                this.processCharacterSelect(client, data);
+                break;
+            case OpCode.ENTER_MAP:
+                this.processMapEnter(client, data);
+                break;
+            case OpCode.ENTER_INSTANCE:
+                this.processInstanceEnter(client, data);
                 break;
             default:
                 client.send(OpCode.INVALID_OPCODE, "Invalid OpCode", Status.BAD);
@@ -190,7 +206,7 @@ export class GameManager{
             return;
         }
 
-        let map:MapInstance = this._maps[mapID] || null;
+        let map:GameMapOpen = this._maps[mapID] || null;
         if(!map){
             client.send(OpCode.ENTER_MAP, "Invalid map ID.");
             return;
@@ -205,6 +221,43 @@ export class GameManager{
         }
         catch(err){
             client.send(OpCode.ENTER_MAP, err.message, Status.BAD);
+        }
+    }
+
+    private processInstanceEnter(client:GameClient, data:any):void{
+        let {instanceID=null, instanceType=null} = data;
+
+        if(!instanceID && !instanceType){
+            client.send(OpCode.ENTER_INSTANCE, "Invalid request json - missing instance ID or new instance type.");
+            return;
+        }
+
+        let instance:GameMapInstance = null;
+
+        if(instanceID){
+            instance = this._instances[instanceID] || null;
+        }
+        else if(instanceType){
+            try{
+                instance = GameMapFactory.createInstance(instanceType);
+                instance.on("empty", () => delete this._instances[instance.instanceID]);
+            }
+            catch(err){
+                client.send(OpCode.ENTER_INSTANCE, `Unable to create instance: ${err.message}`, Status.BAD);
+                return;
+            }
+        }
+
+        if(!instance){
+            client.send(OpCode.ENTER_INSTANCE, "Instance not found.", Status.BAD);
+            return;
+        }
+
+        try{
+            instance.addClient(client); // sends the map join packet
+        }
+        catch(err){
+            client.send(OpCode.ENTER_INSTANCE, err.message, Status.BAD);
         }
     }
 

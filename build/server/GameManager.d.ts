@@ -8,6 +8,7 @@ export declare class GameManager {
     private _clients;
     private _numClients;
     private _maps;
+    private _instances;
     constructor(database: DBController);
     createClient(conn: websocket.connection): void;
     removeClient(client: GameClient): void;
@@ -18,6 +19,7 @@ export declare class GameManager {
     private processCharacterCreate;
     private processCharacterSelect;
     private processMapEnter;
+    private processInstanceEnter;
     private loadPlayer;
     readonly numClients: number;
 }

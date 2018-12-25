@@ -37,7 +37,7 @@ export function getArchetypeName(id:number):string{
     }
 }
 
-export const enum Map{
+export const enum MapType{
     CITY_OF_KINGS =       1,
     HINTERLANDS =         2,
     NORTHERN_RUINS =      3,
@@ -48,17 +48,17 @@ export const enum Map{
 
 export const getMapName = function(id:number):string{
     switch(id){
-        case Map.CITY_OF_KINGS:
+        case MapType.CITY_OF_KINGS:
             return "City of Kings";
-        case Map.HINTERLANDS:
+        case MapType.HINTERLANDS:
             return "Hinterlands";
-        case Map.NORTHERN_RUINS:
+        case MapType.NORTHERN_RUINS:
             return "Northern Ruins";
-        case Map.DESERT_OASIS:
+        case MapType.DESERT_OASIS:
             return "Desert Oasis";
-        case Map.VOLCANIC_WASTELANDS:
+        case MapType.VOLCANIC_WASTELANDS:
             return "Volcanic Wastelands";
-        case Map.THE_SCHISM:
+        case MapType.THE_SCHISM:
             return "The Schism";
         default:
             return "NOT_FOUND";   
@@ -76,7 +76,7 @@ export const getMapData = function(id:number):MapData{
     return MAP_DATA[id] || null;
 }
 
-export const enum Instance{
+export const enum MapInstanceType{
     RAIDER_ENCAMPMENT = 1,
     ORC_STRONGHOLD =    2,
     ANCIENT_CATACOMBS = 3,
@@ -89,21 +89,21 @@ export const enum Instance{
 
 export const getInstanceName = function(id:number):string{
     switch(id){
-        case Instance.RAIDER_ENCAMPMENT:
+        case MapInstanceType.RAIDER_ENCAMPMENT:
             return "Raider Encampment";
-        case Instance.ORC_STRONGHOLD:
+        case MapInstanceType.ORC_STRONGHOLD:
             return "Orc Stronghold";
-        case Instance.ANCIENT_CATACOMBS:
+        case MapInstanceType.ANCIENT_CATACOMBS:
             return "Ancient Catacombs";
-        case Instance.FORBIDDEN_RUINS:
+        case MapInstanceType.FORBIDDEN_RUINS:
             return "Forbidden Ruins";
-        case Instance.DESERTERS_BASTION:
+        case MapInstanceType.DESERTERS_BASTION:
             return "Deserters Bastion";
-        case Instance.OASIS_CATHEDRAL:
+        case MapInstanceType.OASIS_CATHEDRAL:
             return "Oasis Cathedral";
-        case Instance.HELL_FORGE:
+        case MapInstanceType.HELL_FORGE:
             return "Hell Forge";
-        case Instance.DEEP_MINES:
+        case MapInstanceType.DEEP_MINES:
             return "Hell Forge";
         default:
             return "NOT_FOUND";   

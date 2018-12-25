@@ -10,7 +10,7 @@ export declare const enum Archetype {
     BLOOD_MAGE = 32
 }
 export declare function getArchetypeName(id: number): string;
-export declare const enum Map {
+export declare const enum MapType {
     CITY_OF_KINGS = 1,
     HINTERLANDS = 2,
     NORTHERN_RUINS = 3,
@@ -26,7 +26,7 @@ export interface MapData {
     foreground?: number[][];
 }
 export declare const getMapData: (id: number) => MapData;
-export declare const enum Instance {
+export declare const enum MapInstanceType {
     RAIDER_ENCAMPMENT = 1,
     ORC_STRONGHOLD = 2,
     ANCIENT_CATACOMBS = 3,
