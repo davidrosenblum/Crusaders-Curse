@@ -28,6 +28,7 @@ export interface CharacterDocument{
     level:number;
     xp:number;
     gold:number;
+    ability_points:number;
     archetype_id:number;
     abilities: {[ability:string]: number},
     potions:CharacterDocumentPotions;
@@ -44,6 +45,7 @@ export class CharactersCollection{
             level: 1,
             xp: 0,
             gold: 0,
+            ability_points: 0,
             skin,
             abilities: {},
             potions: {health: 0, mana: 0, rage: 0, luck: 0, protection: 0},

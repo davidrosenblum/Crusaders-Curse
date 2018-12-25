@@ -1,7 +1,9 @@
 import * as websocket from "websocket";
 import { GameClient, GameClientRequest } from "./GameClient";
-import { OpCode, Status } from "../data/Data";
+import { OpCode, Status, Archetype } from "../data/Data";
 import { DBController } from "../database/DBController";
+import { Player } from "../entities/Player";
+import { PlayerFactory } from "../entities/PlayerFactory";
 
 export class GameManager{
     public static readonly CLIENT_VERSION_REQUIRED:string = "0.1.0";
@@ -35,6 +37,10 @@ export class GameManager{
     public removeClient(client:GameClient):void{
         if(delete this._clients[client.clientID]){
             this._numClients--;
+
+            if(client.hasAccountData){
+                delete this._accounts[client.username];
+            }
         }
     }
 
@@ -107,6 +113,79 @@ export class GameManager{
         this._database.getCharacterList(client.accountID)
             .then(list => client.send(OpCode.CHARACTER_LIST, list, Status.GOOD))
             .catch(err => client.send(OpCode.CHARACTER_LIST, err.message, Status.BAD))
+    }
+
+    private processCharacterCreate(client:GameClient, data:any):void{
+        let {name=null, archetype=null, skin=null} = data;
+
+        if(!client.hasAccountData){
+            client.send(OpCode.CHARACTER_CREATE, "Account are not logged in.", Status.BAD);
+            return;
+        }
+
+        if(!name || !archetype){
+            client.send(OpCode.CHARACTER_CREATE, "Invalid request json.", Status.BAD);
+            return;
+        }
+
+        let archetypeID:number = -1;
+        switch(archetype.toLowerCase()){
+            case "knight":
+                archetypeID = Archetype.KNIGHT;
+                break;
+            case "ranger":
+                archetypeID = Archetype.RANGER;
+                break;
+            case "mage":
+                archetypeID = Archetype.MAGE;
+                break;
+        }
+
+        if(archetypeID === -1){
+            client.send(OpCode.CHARACTER_CREATE, "Invalid archetype.", Status.BAD);
+            return;
+        }
+
+        this._database.createCharacter(client.accountID, archetypeID, name, skin)
+            .then(report => client.send(OpCode.CHARACTER_CREATE, report, Status.GOOD))
+            .catch(err => client.send(OpCode.CHARACTER_CREATE, err.message, Status.BAD));
+    }
+
+    private processCharacterSelect(client:GameClient, data:any):void{
+        let {name} = data;
+
+        if(!client.hasAccountData){
+            client.send(OpCode.CHARACTER_SELECT, "Account are not logged in.", Status.BAD);
+            return;
+        }
+
+        if(client.player){
+            client.send(OpCode.CHARACTER_SELECT, "Player already selected.", Status.BAD);
+            return;
+        }
+
+        client.setPlayerName(name);
+
+        this.loadPlayer(client)
+            .then(() => {
+                // join map! 
+            })
+            .catch(err => {
+                client.setPlayerName(null);
+                client.send(OpCode.CHARACTER_SELECT, err.message, Status.BAD)
+            });
+    }
+
+    private loadPlayer(client:GameClient):Promise<Player>{
+        return new Promise((resolve, reject) => {
+            this._database.getCharacter(client.accountID, client.playerName)
+                .then(saveData => {
+                    client.player = PlayerFactory.restoreFromSave(saveData);
+                    resolve(client.player);
+                })
+                .catch(err => reject(err));
+        });
+        
     }
 
     public get numClients():number{

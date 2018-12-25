@@ -24,18 +24,20 @@ export class GameClient{
     private _conn:websocket.connection;
     private _clientID:string;
     private _accountData:AccountData;
+    private _playerName:string;
     public player:Player;
 
     constructor(connection:websocket.connection){
         this._conn = connection;
         this._clientID = GameClient.tokenGen.nextToken();
         this._accountData = null;
+        this._playerName = null;
         this.player = null;
     }
 
     public send(opCode:OpCode, data:any=null, status:Status=Status.GOOD):void{
         data = (typeof data === "string") ? {message: data} : data;
-        
+
         this._conn.send(JSON.stringify({opCode, data, status}));
     }
 
@@ -43,12 +45,24 @@ export class GameClient{
         this._accountData = accountData;
     }
 
+    public setPlayerName(playerName:string):void{
+        this._playerName = playerName;
+    }
+
     public get username():string{
         return this._accountData ? this._accountData.username : null;
     }
 
+    public get accountID():number{
+        return this._accountData ? this._accountData.accountID : -1;
+    }
+
     public get hasAccountData():boolean{
         return this._accountData = null;
+    }
+
+    public get playerName():string{
+        return this._playerName;
     }
 
     public get clientID():string{
