@@ -38,7 +38,11 @@ export class GameClient{
     public send(opCode:OpCode, data:any=null, status:Status=Status.GOOD):void{
         data = (typeof data === "string") ? {message: data} : data;
 
-        this._conn.send(JSON.stringify({opCode, data, status}));
+        this._conn.send(JSON.stringify({opCode, data, status}) + GameClient.MSG_DELIM);
+    }
+
+    public sendString(string:string, delimit:boolean=true):void{
+        delimit ? this._conn.send(`string${GameClient.MSG_DELIM}`) : this._conn.send(string);
     }
 
     public setAccountData(accountData:AccountData):void{
@@ -55,6 +59,10 @@ export class GameClient{
 
     public get accountID():number{
         return this._accountData ? this._accountData.accountID : -1;
+    }
+
+    public get accessLevel():number{
+        return this._accountData ? this._accountData.accessLevel : -1;
     }
 
     public get hasAccountData():boolean{

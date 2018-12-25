@@ -20,6 +20,8 @@ export declare class GameManager {
     private processCharacterSelect;
     private processMapEnter;
     private processInstanceEnter;
+    private processChat;
     private loadPlayer;
+    private adminCommand;
     readonly numClients: number;
 }
