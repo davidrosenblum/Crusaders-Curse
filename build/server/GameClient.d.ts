@@ -22,10 +22,12 @@ export declare class GameClient {
     player: Player;
     constructor(connection: websocket.connection);
     send(opCode: OpCode, data?: any, status?: Status): void;
+    sendString(string: string, delimit?: boolean): void;
     setAccountData(accountData: AccountData): void;
     setPlayerName(playerName: string): void;
     readonly username: string;
     readonly accountID: number;
+    readonly accessLevel: number;
     readonly hasAccountData: boolean;
     readonly playerName: string;
     readonly clientID: string;

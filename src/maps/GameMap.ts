@@ -28,7 +28,17 @@ export abstract class GameMap extends EventEmitter{
         this._numClients = 0;
     }
 
-    public addClient(client:GameClient):void{
+    private bulkUpdate(opCode:OpCode, data?:any, status?:Status):void{
+        let json:string = JSON.stringify({opCode, data, status});
+
+        this.forEachClient(client => client.sendString(json));
+    }
+
+    public submitChat(chat:string, from:string):void{
+        this.bulkUpdate(OpCode.CHAT_MESSAGE, {chat, from}, Status.GOOD);
+    }
+
+    public addClient(client:GameClient, successBeforePlayer?:(done:Function)=>any):void{
         if(!this.hasClient(client)){
             this._clients[client.clientID] = client;
             this._numClients++;
@@ -36,9 +46,14 @@ export abstract class GameMap extends EventEmitter{
             let mapState:GameMapFullState = this.getState();
             client.send(OpCode.ENTER_MAP, mapState, Status.GOOD);
 
-            this.addUnit(client.player);
+            if(successBeforePlayer){
+                successBeforePlayer(() => this.addUnit(client.player));
+            }
+            else{
+                this.addUnit(client.player);
+            }
         }
-        else throw new Error("Already in map.");
+        else throw new Error("Already in map.")
     }
 
     public removeClient(client:GameClient):void{

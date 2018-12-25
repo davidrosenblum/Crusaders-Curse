@@ -78,6 +78,9 @@ export class GameManager{
             case OpCode.ENTER_INSTANCE:
                 this.processInstanceEnter(client, data);
                 break;
+            case OpCode.CHAT_MESSAGE:
+                this.processChat(client, data);
+                break;
             default:
                 client.send(OpCode.INVALID_OPCODE, "Invalid OpCode", Status.BAD);
                 break;
@@ -85,12 +88,12 @@ export class GameManager{
     }
 
     private processLogin(client:GameClient, data:any):void{
-        let {username=null, password=null, version=null} = data;
-
         if(client.hasAccountData){
             client.send(OpCode.ACCOUNT_LOGIN, "You are already logged in.", Status.BAD);
             return;
         }
+
+        let {username=null, password=null, version=null} = data;
 
         if(!username || !password || !version){
             client.send(OpCode.ACCOUNT_LOGIN, "Invalid request json - missing username and/or password and/or version.", Status.BAD);
@@ -137,12 +140,12 @@ export class GameManager{
     }
 
     private processCharacterCreate(client:GameClient, data:any):void{
-        let {name=null, archetype=null, skin=null} = data;
-
         if(!client.hasAccountData){
             client.send(OpCode.CHARACTER_CREATE, "Account are not logged in.", Status.BAD);
             return;
         }
+
+        let {name=null, archetype=null, skin=null} = data;
 
         if(!name || !archetype){
             client.send(OpCode.CHARACTER_CREATE, "Invalid request json - missing name and/or archetype.", Status.BAD);
@@ -173,8 +176,6 @@ export class GameManager{
     }
 
     private processCharacterSelect(client:GameClient, data:any):void{
-        let {name} = data;
-
         if(!client.hasAccountData){
             client.send(OpCode.CHARACTER_SELECT, "Account are not logged in.", Status.BAD);
             return;
@@ -184,6 +185,8 @@ export class GameManager{
             client.send(OpCode.CHARACTER_SELECT, "Player already selected.", Status.BAD);
             return;
         }
+
+        let {name} = data;
 
         client.setPlayerName(name);
 
@@ -199,6 +202,11 @@ export class GameManager{
     }
 
     private processMapEnter(client:GameClient, data:any):void{
+        if(!client.hasAccountData || !client.playerName){
+            client.send(OpCode.ENTER_MAP, "Account are not logged in.", Status.BAD);
+            return;
+        }
+
         let {mapID=null} = data;
 
         if(!mapID){
@@ -225,6 +233,11 @@ export class GameManager{
     }
 
     private processInstanceEnter(client:GameClient, data:any):void{
+        if(!client.hasAccountData || !client.playerName){
+            client.send(OpCode.ENTER_INSTANCE, "Account are not logged in.", Status.BAD);
+            return;
+        }
+
         let {instanceID=null, instanceType=null} = data;
 
         if(!instanceID && !instanceType){
@@ -254,12 +267,35 @@ export class GameManager{
         }
 
         try{
-            instance.addClient(client); // sends the map join packet
+            // sends the map join packet
+            instance.addClient(client, done => {
+                this.loadPlayer(client)
+                    .then(() => done())
+                    .catch(err => client.send(OpCode.ENTER_INSTANCE, err.message, Status.BAD));
+            }); 
         }
         catch(err){
             client.send(OpCode.ENTER_INSTANCE, err.message, Status.BAD);
         }
     }
+
+    private processChat(client:GameClient, data:any):void{
+        if(!client.hasAccountData || !client.playerName){
+            client.send(OpCode.CHAT_MESSAGE, "Account are not logged in.", Status.BAD);
+            return;
+        }
+
+        let {chat=null} = data;
+
+        if(typeof chat === "string"){
+            if(chat.charAt(0) === "~" && client.accessLevel > 1){
+                this.adminCommand(client, chat);
+            }
+            else{
+                client.player.map.submitChat(chat, client.playerName);
+            }
+        }  
+    } 
 
     private loadPlayer(client:GameClient):Promise<CharacterDocument>{
         return new Promise((resolve, reject) => {
@@ -270,7 +306,10 @@ export class GameManager{
                 })
                 .catch(err => reject(err));
         });
-        
+    }
+
+    private adminCommand(client:GameClient, chat:string):void{
+
     }
 
     public get numClients():number{
