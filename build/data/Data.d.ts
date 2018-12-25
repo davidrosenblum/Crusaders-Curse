@@ -18,7 +18,14 @@ export declare const enum Map {
     VOLCANIC_WASTELANDS = 5,
     THE_SCHISM = 6
 }
-export declare function getMapName(id: number): string;
+export declare const getMapName: (id: number) => string;
+export interface MapData {
+    tileSize: number;
+    background: number[][];
+    midground: number[][];
+    foreground?: number[][];
+}
+export declare const getMapData: (id: number) => MapData;
 export declare const enum Instance {
     RAIDER_ENCAMPMENT = 1,
     ORC_STRONGHOLD = 2,
@@ -29,7 +36,7 @@ export declare const enum Instance {
     HELL_FORGE = 7,
     DEEP_MINES = 8
 }
-export declare function getInstanceName(id: number): string;
+export declare const getInstanceName: (id: number) => string;
 export declare const enum OpCode {
     ACCOUNT_LOGIN = 1,
     ACCOUNT_LOGOUT = 2,
@@ -86,10 +93,4 @@ export declare const enum Team {
     SEPARATISTS = "separatists",
     CULTISTS = "cultists",
     IMPERIALS = "imperials"
-}
-export declare const enum Facing {
-    UP = "up",
-    DOWN = "down",
-    LEFT = "left",
-    RIGHT = "right"
 }

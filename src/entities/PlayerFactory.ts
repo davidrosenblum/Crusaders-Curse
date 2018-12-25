@@ -1,4 +1,4 @@
-import { Archetype, getArchetypeName, Facing } from "../data/Data";
+import { Archetype, getArchetypeName } from "../data/Data";
 import { CharacterDocument } from "../database/collections/CharactersCollection";
 import { Player } from "./Player";
 

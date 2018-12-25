@@ -3,10 +3,11 @@ import { GameClient } from "./GameClient";
 import { DBController } from "../database/DBController";
 export declare class GameManager {
     static readonly CLIENT_VERSION_REQUIRED: string;
+    private _database;
     private _accounts;
     private _clients;
     private _numClients;
-    private _database;
+    private _maps;
     constructor(database: DBController);
     createClient(conn: websocket.connection): void;
     removeClient(client: GameClient): void;
@@ -16,6 +17,7 @@ export declare class GameManager {
     private processCharacterList;
     private processCharacterCreate;
     private processCharacterSelect;
+    private processMapEnter;
     private loadPlayer;
     readonly numClients: number;
 }

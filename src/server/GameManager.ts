@@ -4,19 +4,24 @@ import { OpCode, Status, Archetype } from "../data/Data";
 import { DBController } from "../database/DBController";
 import { Player } from "../entities/Player";
 import { PlayerFactory } from "../entities/PlayerFactory";
+import { MapInstance } from "../maps/MapInstance";
+import { CharacterDocument } from "../database/collections/CharactersCollection";
 
 export class GameManager{
     public static readonly CLIENT_VERSION_REQUIRED:string = "0.1.0";
 
+    private _database:DBController;
     private _accounts:{[username:string]: GameClient};
     private _clients:{[id:string]: GameClient};
     private _numClients:number;
-    private _database:DBController;
+    private _maps:{[id:number]: MapInstance};
 
     constructor(database:DBController){
+        this._database = database;
         this._accounts = {};
         this._clients = {};
         this._numClients = 0;
+        this._maps = {};
     }
 
     public createClient(conn:websocket.connection):void{
@@ -72,7 +77,7 @@ export class GameManager{
         }
 
         if(!username || !password || !version){
-            client.send(OpCode.ACCOUNT_LOGIN, "Invalid request json.", Status.BAD);
+            client.send(OpCode.ACCOUNT_LOGIN, "Invalid request json - missing username and/or password and/or version.", Status.BAD);
             return;
         }
 
@@ -124,7 +129,7 @@ export class GameManager{
         }
 
         if(!name || !archetype){
-            client.send(OpCode.CHARACTER_CREATE, "Invalid request json.", Status.BAD);
+            client.send(OpCode.CHARACTER_CREATE, "Invalid request json - missing name and/or archetype.", Status.BAD);
             return;
         }
 
@@ -142,7 +147,7 @@ export class GameManager{
         }
 
         if(archetypeID === -1){
-            client.send(OpCode.CHARACTER_CREATE, "Invalid archetype.", Status.BAD);
+            client.send(OpCode.CHARACTER_CREATE, "Invalid request json - invalid archetype.", Status.BAD);
             return;
         }
 
@@ -167,21 +172,48 @@ export class GameManager{
         client.setPlayerName(name);
 
         this.loadPlayer(client)
-            .then(() => {
-                // join map! 
+            .then(saveData => {
+                let mapID:number = saveData.last_map.map_id;
+                this.processMapEnter(client, {mapID});
             })
             .catch(err => {
                 client.setPlayerName(null);
-                client.send(OpCode.CHARACTER_SELECT, err.message, Status.BAD)
+                client.send(OpCode.CHARACTER_SELECT, err.message, Status.BAD);
             });
     }
 
-    private loadPlayer(client:GameClient):Promise<Player>{
+    private processMapEnter(client:GameClient, data:any):void{
+        let {mapID=null} = data;
+
+        if(!mapID){
+            client.send(OpCode.ENTER_MAP, "Invalid request json - missing map ID.")
+            return;
+        }
+
+        let map:MapInstance = this._maps[mapID] || null;
+        if(!map){
+            client.send(OpCode.ENTER_MAP, "Invalid map ID.");
+            return;
+        }
+
+        if(client.player.map){
+            client.player.map.removeClient(client);
+        }
+
+        try{
+            map.addClient(client); // sends the map join packet
+        }
+        catch(err){
+            client.send(OpCode.ENTER_MAP, err.message, Status.BAD);
+        }
+    }
+
+    private loadPlayer(client:GameClient):Promise<CharacterDocument>{
         return new Promise((resolve, reject) => {
             this._database.getCharacter(client.accountID, client.playerName)
                 .then(saveData => {
                     client.player = PlayerFactory.restoreFromSave(saveData);
-                    resolve(client.player);
+                    resolve(saveData);
                 })
                 .catch(err => reject(err));
         });
