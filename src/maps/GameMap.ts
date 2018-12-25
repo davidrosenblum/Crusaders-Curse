@@ -1,35 +1,26 @@
 import { EventEmitter } from "events";
 import { GameClient } from "../server/GameClient";
 import { CasterObject } from "../entities/CasterObject";
-import { TransportNode, TransportNodeFullState } from "./TransportNode";
-import { TokenGenerator } from "../utils/TokenGenerator";
-import { OpCode, Status } from "../data/Data";
+import { TransportNode, TransportNodeFullState, TransportNodeType } from "./TransportNode";
+import { OpCode, Status, MapData } from "../data/Data";
 import { GameObjectFullState } from "../entities/GameObject";
 
-export interface MapFullState{
+export interface GameMapFullState{
     transportNodes:TransportNodeFullState[];
     units:GameObjectFullState[];
-    mapData:number[][];
+    mapData:MapData;
 }
 
-export class MapInstance extends EventEmitter{
-    private static tokenGen:TokenGenerator = new TokenGenerator(16);
-
-    private _mapName:string;
-    private _mapID:number;
-    private _instanceID:string;
-    private _mapData:number[][];
+export abstract class GameMap extends EventEmitter{
+    private _mapData:MapData;
     private _clients:{[id:string]: GameClient};
     private _units:{[id:string]: CasterObject};
     private _transportNodes:{[id:string]: TransportNode};
     private _numClients:number;
 
-    constructor(mapName:string, mapID:number, mapData:number[][]){
+    constructor(mapData:MapData){
         super();
 
-        this._mapName = mapName;
-        this._mapID = mapID;
-        this._instanceID = MapInstance.tokenGen.nextToken();
         this._mapData = mapData;
         this._clients = {};
         this._units = {};
@@ -42,7 +33,7 @@ export class MapInstance extends EventEmitter{
             this._clients[client.clientID] = client;
             this._numClients++;
 
-            let mapState:MapFullState = this.getState();
+            let mapState:GameMapFullState = this.getState();
             client.send(OpCode.ENTER_MAP, mapState, Status.GOOD);
 
             this.addUnit(client.player);
@@ -57,6 +48,10 @@ export class MapInstance extends EventEmitter{
 
             if(client.player){
                 this.removeUnit(client.player);
+            }
+
+            if(this.isEmpty){
+                this.emit("empty");
             }
         }
     }
@@ -81,7 +76,7 @@ export class MapInstance extends EventEmitter{
         return false;
     }
 
-    public createTransportNode(type:string, text:string, row:number, col:number, outMapID, outX, outY):void{
+    public createTransportNode(type:TransportNodeType, text:string, row:number, col:number, outMapID, outX, outY):void{
         let tnode:TransportNode = new TransportNode(type, text, row, col, outMapID, outX, outY);
 
         this._transportNodes[tnode.nodeID] = tnode;
@@ -95,7 +90,7 @@ export class MapInstance extends EventEmitter{
         return unit.objectID in this._units;
     }
  
-    private getState():MapFullState{
+    private getState():GameMapFullState{
         let unitStates:GameObjectFullState[] = [];
         this.forEachUnit(unit => unitStates.push(unit.getState()));
 
@@ -129,17 +124,5 @@ export class MapInstance extends EventEmitter{
 
     public get isEmpty():boolean{
         return this.numClients === 0;
-    }
-
-    public get mapName():string{
-        return this._mapName;
-    }
-
-    public get mapID():number{
-        return this._mapID;
-    }
-
-    public get instanceID():string{
-        return this._instanceID;
     }
 }

@@ -1,5 +1,5 @@
 import { CombatObject, CombatObjectConfig } from "./CombatObject";
-import { MapInstance } from "../maps/MapInstance";
+import { GameMap } from "../maps/GameMap";
 export interface CasterObjectConfig extends CombatObjectConfig {
     abilities: {
         [ability: string]: number;
@@ -11,6 +11,6 @@ export declare abstract class CasterObject extends CombatObject {
     constructor(config: CasterObjectConfig);
     learnAbility(abilityName: string, level?: number): void;
     hasAbility(abilityName: string): boolean;
-    setMap(map: MapInstance): void;
-    readonly map: MapInstance;
+    setMap(map: GameMap): void;
+    readonly map: GameMap;
 }

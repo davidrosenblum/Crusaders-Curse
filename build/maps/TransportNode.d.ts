@@ -1,3 +1,4 @@
+import { MapType } from "../data/Data";
 export interface TransportNodeFullState {
     nodeID: string;
     type: string;
@@ -7,6 +8,10 @@ export interface TransportNodeFullState {
     outMapID: number;
     outX: number;
     outY: number;
+}
+export declare const enum TransportNodeType {
+    AIRSHIP = "airship",
+    PORTAL = "portal"
 }
 export declare class TransportNode {
     private static tokenGen;
@@ -18,14 +23,14 @@ export declare class TransportNode {
     private _outMapID;
     private _outX;
     private _outY;
-    constructor(type: string, text: string, row: number, col: number, outMapID: number, outX: number, outY: number);
+    constructor(type: TransportNodeType, text: string, row: number, col: number, outMapID: MapType, outX: number, outY: number);
     getState(): TransportNodeFullState;
     readonly nodeID: string;
-    readonly type: string;
+    readonly type: TransportNodeType;
     readonly text: string;
     readonly row: number;
     readonly col: number;
-    readonly outMapID: number;
+    readonly outMapID: MapType;
     readonly outX: number;
     readonly outY: number;
 }

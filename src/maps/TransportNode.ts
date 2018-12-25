@@ -1,4 +1,5 @@
 import { TokenGenerator } from "../utils/TokenGenerator";
+import { MapType } from "../data/Data";
 
 export interface TransportNodeFullState{
     nodeID:string;
@@ -11,12 +12,16 @@ export interface TransportNodeFullState{
     outY:number;
 }
 
+export const enum TransportNodeType{
+    AIRSHIP =   "airship",
+    PORTAL =    "portal"
+}
 
 export class TransportNode{
     private static tokenGen:TokenGenerator = new TokenGenerator(16);
 
     private _nodeID:string;
-    private _type:string;
+    private _type:TransportNodeType;
     private _text:string;
     private _row:number;
     private _col:number;
@@ -24,7 +29,7 @@ export class TransportNode{
     private _outX:number;
     private _outY:number;
 
-    constructor(type:string, text:string, row:number, col:number, outMapID:number, outX:number, outY:number){
+    constructor(type:TransportNodeType, text:string, row:number, col:number, outMapID:MapType, outX:number, outY:number){
         this._nodeID = TransportNode.tokenGen.nextToken();
         this._type = type;
         this._text = text;
@@ -52,7 +57,7 @@ export class TransportNode{
         return this._nodeID;
     }
 
-    public get type():string{
+    public get type():TransportNodeType{
         return this._type;
     }
 
@@ -68,7 +73,7 @@ export class TransportNode{
         return this._col;
     }
 
-    public get outMapID():number{
+    public get outMapID():MapType{
         return this._outMapID;
     }
 
