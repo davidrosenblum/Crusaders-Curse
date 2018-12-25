@@ -7,6 +7,7 @@ export interface NPCConfig extends CasterObjectConfig {
 export declare class NPC extends CasterObject {
     private _xpValue;
     private _goldValue;
+    private _hasGivenBounty;
     constructor(config: NPCConfig);
     giveBounty(players: {
         [id: string]: Player;

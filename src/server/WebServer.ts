@@ -7,8 +7,7 @@ import { SettingsUtils, SettingsConfig } from "../utils/SettingsUtils";
 import { DBController } from "../database/DBController";
 import { RequestHandlerUtils } from "../utils/RequestHandlerUtils";
 import { AccountCreateHandler } from './handlers/AccountCreateHandler';
-import { GameClient } from "./GameClient";
-import { OpCode } from "../data/Data";
+import { GameManager } from "./GameManager";
 
 export class WebServer{
     private _httpServer:http.Server;
@@ -16,7 +15,7 @@ export class WebServer{
     private _app:express.Application;
     private _settings:SettingsConfig;
     private _database:DBController;
-    private _clients:{[id:string]: GameClient};
+    private _game:GameManager;
 
     constructor(){
         this._app = express().use(express.static(`${__dirname}/../../web/build`));
@@ -24,7 +23,7 @@ export class WebServer{
         this._wsServer = new websocket.server({httpServer: this._httpServer});
         this._settings = null;
         this._database = null;
-        this._clients = {};
+        this._game = null;
 
         this._wsServer.on("request", this.onWebSocket.bind(this));
 
@@ -34,25 +33,8 @@ export class WebServer{
 
     private onWebSocket(request:websocket.request):void{
         let conn:websocket.connection = request.accept(null, request.origin);
-        let client:GameClient = new GameClient(conn);
-
-        this._clients[client.clientID] = client;
-
-        conn.on("message", data => {
-            GameClient.parseRequests(data, this.handlClientRequest.bind(this));
-        });
-
-        conn.on("error", err => {
-            console.log(err.message);
-        });
-
-        conn.on("close", () => {
-            delete this._clients[client.clientID];
-        });
-    }
-
-    private handlClientRequest(opCode:OpCode, data:any):void{
-        // do stuff 
+        
+        this._game.createClient(conn);
     }
 
     private createRoutes():void{
@@ -79,6 +61,7 @@ export class WebServer{
             let mongoDbName:string = process.env.MONGO_DB || this._settings.mongo_database.database_name;
             let mongoClient:MongoClient = await MongoClient.connect(mongoUri, {useNewUrlParser: true});
             this._database = new DBController(mongoClient.db(mongoDbName));
+            this._game = new GameManager(this._database);
             console.log("Database connected.\n");
 
             console.log("Starting server...");

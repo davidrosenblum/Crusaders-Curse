@@ -2,9 +2,15 @@ import * as websocket from "websocket";
 import { OpCode, Status } from "../data/Data";
 import { AccountData } from "../database/AccountData";
 import { Player } from "../entities/Player";
-export interface ClientRequest {
+export interface GameClientRequest {
     opCode: OpCode;
     data: any;
+    client: GameClient;
+}
+export interface GameClientResponse {
+    opCode: OpCode;
+    data: any;
+    status: Status;
 }
 export declare class GameClient {
     static readonly MSG_DELIM: string;
@@ -19,5 +25,5 @@ export declare class GameClient {
     readonly username: string;
     readonly hasAccountData: boolean;
     readonly clientID: string;
-    static parseRequests(message: websocket.IMessage, handler: (req: ClientRequest) => any): void;
+    static parseRequests(client: GameClient, message: websocket.IMessage, handler: (req: GameClientRequest) => any): void;
 }

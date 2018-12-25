@@ -4,9 +4,16 @@ import { TokenGenerator } from "../utils/TokenGenerator";
 import { AccountData } from "../database/AccountData";
 import { Player } from "../entities/Player";
 
-export interface ClientRequest{
+export interface GameClientRequest{
     opCode:OpCode;
     data:any;
+    client:GameClient;
+}
+
+export interface GameClientResponse{
+    opCode:OpCode;
+    data:any;
+    status:Status;
 }
 
 export class GameClient{
@@ -27,6 +34,8 @@ export class GameClient{
     }
 
     public send(opCode:OpCode, data:any=null, status:Status=Status.GOOD):void{
+        data = (typeof data === "string") ? {message: data} : data;
+        
         this._conn.send(JSON.stringify({opCode, data, status}));
     }
 
@@ -46,7 +55,7 @@ export class GameClient{
         return this._clientID;
     }
 
-    public static parseRequests(message:websocket.IMessage, handler:(req:ClientRequest)=>any):void{
+    public static parseRequests(client:GameClient, message:websocket.IMessage, handler:(req:GameClientRequest)=>any):void{
         message.utf8Data.split(GameClient.MSG_DELIM).forEach(msg => {
             let opCode:OpCode, data:any;
 
@@ -60,7 +69,7 @@ export class GameClient{
                 return;
             }
 
-            handler({opCode, data});
+            handler({client, opCode, data});
         });
     }
 }
