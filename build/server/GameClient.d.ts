@@ -26,7 +26,7 @@ export declare class GameClient {
     setAccountData(accountData: AccountData): void;
     setPlayerName(playerName: string): void;
     readonly username: string;
-    readonly accountID: number;
+    readonly accountID: string;
     readonly accessLevel: number;
     readonly hasAccountData: boolean;
     readonly playerName: string;

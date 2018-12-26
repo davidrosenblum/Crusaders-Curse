@@ -5,6 +5,7 @@ import { CasterObject } from "../entities/CasterObject";
 import { TransportNodeFullState, TransportNodeType } from "./TransportNode";
 import { MapData } from "../data/Data";
 import { GameObjectFullState } from "../entities/GameObject";
+import { CombatStats } from "../entities/CombatObject";
 export interface GameMapFullState {
     transportNodes: TransportNodeFullState[];
     units: GameObjectFullState[];
@@ -26,6 +27,8 @@ export declare abstract class GameMap extends EventEmitter {
     createTransportNode(type: TransportNodeType, text: string, row: number, col: number, outMapID: any, outX: any, outY: any): void;
     hasClient(client: GameClient): boolean;
     hasUnit(unit: CasterObject): boolean;
+    getUnitStats(objectID: string): CombatStats;
+    getObjectById(objectID: string): CasterObject;
     private getState;
     private forEachClient;
     private forEachUnit;
