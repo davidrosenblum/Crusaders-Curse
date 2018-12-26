@@ -57,7 +57,7 @@ export class AccountsCollection{
 
                                 if(hash === result.password){
                                     if(result.enabled){
-                                        resolve(new AccountData(result._id, result.username, result.access_level));
+                                        resolve(new AccountData(result._id.toString(), result.username, result.access_level));
                                     }
                                     else reject(new Error(`Account "${username}" is disabled.`));
                                     

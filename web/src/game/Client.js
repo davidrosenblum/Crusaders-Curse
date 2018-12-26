@@ -63,7 +63,11 @@ class Client extends EventEmitter{
             case OpCode.ACCOUNT_LOGOUT: 
                 return this.handleLogout(data, status);
             case OpCode.CHARACTER_LIST: 
-                return this.handeCharacterList(data, status);
+                return this.handleCharacterList(data, status);
+            case OpCode.CHARACTER_CREATE:
+                return this.handleCharacterCreate(data, status);
+            case OpCode.CHARACTER_SELECT:
+                return this.handleCharacterSelect(data, status);
         }
     }
 
@@ -81,11 +85,22 @@ class Client extends EventEmitter{
         }
     }
 
-    handeCharacterList(data, status){
+    handleCharacterList(data, status){
         if(status === Status.GOOD){
             this.emit("character-list", {characterList: data.characterList, success: true});
         }
         else this.emit("character-list", {message: data.message, success: false});
+    }
+
+    handleCharacterCreate(data, status){
+        let success = (status === Status.GOOD);
+        this.emit("character-create", {success, message: data.message || null});
+    }
+
+    handleCharacterSelect(data, status){
+        if(status !== Status.GOOD){
+            this.emit("character-select", {message: data.message, success: false});
+        }
     }
 
     send(opCode, data){

@@ -2,6 +2,8 @@ import React from "react";
 import { Container, Card, CardBody, Button, Form, FormGroup, Label, Input, Row, Col } from "reactstrap";
 import { Banner } from "./Banner";
 import NavDispatcher from "../dispatchers/NavDispatcher";
+import Client from "../game/Client";
+import ModalDispatcher from "../dispatchers/ModalDispatcher";
 
 export const ARCHETYPE_INFO = {
     "Knight": {
@@ -34,10 +36,27 @@ export class CharacterCreate extends React.Component{
 
         this.nameInput = null;
         this.archetypeInput = null;
+
+        this.onCharacterCreate = evt => {
+            if(evt.success){
+                NavDispatcher.showCharacterSelect();
+            }
+            else{
+                this.setInputsDisabled(false);
+                ModalDispatcher.modal(evt.message, "Character Error");
+            }
+        };
     }
 
     componentDidMount(){
+        // intial description info (inputs are null until after first render)
         this.forceUpdate();
+
+        Client.on("character-create", this.onCharacterCreate);
+    }
+
+    componentWillUnmount(){
+        Client.removeListener("character-create", this.onCharacterCreate);
     }
 
     onCancel(){
@@ -49,6 +68,15 @@ export class CharacterCreate extends React.Component{
 
         let name = this.nameInput.value,
             archetype = this.archetypeInput.value.toLowerCase();
+
+        this.setInputsDisabled(true);
+
+        Client.createCharacter(name, archetype, 1);
+    }
+
+    setInputsDisabled(disabled){
+        this.nameInput.disabled = disabled;
+        this.archetypeInput.disabled = disabled;
     }
 
     renderArchetype(){

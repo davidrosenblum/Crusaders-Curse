@@ -1,39 +1,60 @@
 import React from "react";
 import { Container, Card, CardBody, Button, Row, Table } from "reactstrap";
+import { Banner } from "./Banner";
 import Client from "../game/Client";
 import NavDispatcher from "../dispatchers/NavDispatcher";
-import { Banner } from "./Banner";
+import ModalDispatcher from "../dispatchers/ModalDispatcher";
 
 export class CharacterSelect extends React.Component{
-     constructor(props){
-         super(props);
+    constructor(props){
+        super(props);
 
-         this.state = {
-             characterList: null
-         };
-     }
+        this.state = {
+            characterList:  null,
+            inputsDisabled: false
+        }; 
 
-     componentDidMount(){
-        Client.on("character-list", this.onCharacterList.bind(this));
+        this.onCharacterList = evt => {
+            if(evt.success){
+                this.setState({characterList: evt.characterList});
+            }
+        };
+
+        this.onCharacterSelect = evt => {
+            if(!evt.success){
+                this.setState({inputsDisabled: false});
+                ModalDispatcher.modal(evt.message, "Character Error");
+            }
+        };
+    }
+
+    componentDidMount(){
+        Client.on("character-list", this.onCharacterList);
+        Client.on("character-select", this.onCharacterSelect);
 
         Client.getCharacterList();
-     }
+    }
 
-     onCharacterList(evt){
-        let characterList = evt.characterList || [];
-        this.setState({characterList});
-     }
+    componentWillUnmount(){
+        Client.removeListener("character-list", this.onCharacterList);
+        Client.removeListener("character-select", this.onCharacterSelect);
+    }
 
-     onCreate(){
+    onCreate(){
         NavDispatcher.showCharacterCreate();
-     }
+    }
 
-     onLogout(){
-         Client.logout();
-         NavDispatcher.showLogin();
-     }
+    onLogout(){
+        Client.logout();
+        NavDispatcher.showLogin();
+    }
 
-     renderTable(){
+    onSelect(name){
+        this.setState({inputsDisabled: true});
+        Client.selectCharacter(name);
+    }
+
+    renderTable(){
         let rows = [];
 
         for(let i = 0; i < 6; i++){
@@ -41,22 +62,22 @@ export class CharacterSelect extends React.Component{
 
             if(row){
                 rows.push(
-                    <tr>
+                    <tr key={i}>
                         <td colSpan={3}>
                             {row.name} - 
                             Level {row.level} {row.archetype}
                         </td>
                         <td>
-                            <Button>Select</Button>
+                            <Button onClick={() => this.onSelect(row.name)} disabled={this.state.inputsDisabled}>Select</Button>
                         </td>
                     </tr>
                 );
             }
             else{
                 rows.push(
-                    <tr>
+                    <tr key={i}>
                         <td colSpan={4}>
-                            <Button onClick={this.onCreate.bind(this)}>Create</Button>
+                            <Button onClick={this.onCreate.bind(this)} disabled={this.state.inputsDisabled}>Create</Button>
                         </td>
                     </tr>
                 );
@@ -74,34 +95,34 @@ export class CharacterSelect extends React.Component{
                     </tbody>
                 </Table>
                 <div className="text-center">
-                    <Button onClick={this.onLogout.bind(this)}>Logout</Button>
+                    <Button onClick={this.onLogout.bind(this)} disabled={this.state.inputsDisabled}>Logout</Button>
                 </div>
             </div>
         );
      }
 
-     renderBody(){
-        let characterList = this.state.characterList;
-        
-        if(characterList){
-            return this.renderTable();
-        }
+    renderBody(){
+    let characterList = this.state.characterList;
+    
+    if(characterList){
+        return this.renderTable();
+    }
 
-        return <div>Fetching characters...</div>;
-     }
+    return <div>Fetching characters...</div>;
+    }
 
-     render(){
-         return (
-             <div>
-                 <Container>
-                    <br/>
-                    <Card>
-                        <CardBody>
-                            {this.renderBody()}
-                        </CardBody>
-                    </Card>
-                 </Container>
-             </div>
-         )
-     }
+    render(){
+        return (
+            <div>
+                <Container>
+                <br/>
+                <Card>
+                    <CardBody>
+                        {this.renderBody()}
+                    </CardBody>
+                </Card>
+                </Container>
+            </div>
+        )
+    }
 }

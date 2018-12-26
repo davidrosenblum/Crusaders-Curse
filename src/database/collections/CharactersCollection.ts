@@ -37,31 +37,49 @@ export interface CharacterDocument{
 }
 
 export class CharactersCollection{
-    public static createCharacter(database:Db, accountID:string, archetypeID:number, name:string, skin:number=1):Promise<InsertOneWriteOpResult>{
-        let characterDoc:CharacterDocument = {
-            account_id: accountID,
-            name,
-            archetype_id: archetypeID,
-            level: 1,
-            xp: 0,
-            gold: 0,
-            ability_points: 0,
-            skin,
-            abilities: {},
-            potions: {health: 0, mana: 0, rage: 0, luck: 0, protection: 0},
-            last_map: {map_id: 1, x: -1, y:-1}
-        };
-
-        return database.collection("characters").insertOne(characterDoc);
+    public static createCharacter(database:Db, accountID:string, archetypeID:number, name:string, skin:number=1):Promise<string>{
+        return new Promise((resolve, reject) => {
+            let characterDoc:CharacterDocument = {
+                account_id: accountID,
+                name,
+                archetype_id: archetypeID,
+                level: 1,
+                xp: 0,
+                gold: 0,
+                ability_points: 0,
+                skin,
+                abilities: {},
+                potions: {health: 0, mana: 0, rage: 0, luck: 0, protection: 0},
+                last_map: {map_id: 1, x: -1, y:-1}
+            };
+    
+            database.collection("characters").insertOne(characterDoc)
+                .then(result => {
+                    if(result.insertedCount > 0){
+                        resolve(`Character "${name}" created.`);
+                    }
+                    else reject(new Error("Character not created."));
+                })
+                .catch(err => reject(err));
+        });
     }
 
-    public static deleteCharacter(database:Db, accountID:string, name:string):Promise<DeleteWriteOpResultObject>{
-        return database.collection("characters").deleteOne({account_id: accountID, name});
+    public static deleteCharacter(database:Db, accountID:string, name:string):Promise<string>{
+        return new Promise((resolve, reject) => {
+            database.collection("characters").deleteOne({account_id: accountID, name})
+                .then(report => {
+                    if(report.deletedCount > 0){
+                        resolve(`Charater "${name}" deleted.`);
+                    }
+                    else reject(new Error("Character not deleted."));
+                })
+                .catch(err => reject(err));
+        });
     }
 
     public static getCharacter(database:Db, accountID:string, name:string):Promise<CharacterDocument>{
         return new Promise((resolve, reject) => {
-            database.collection("characters").findOne({accountID, name})
+            database.collection("characters").findOne({account_id: accountID, name})
                 .then(data => {
                     if(data){
                         resolve(data as CharacterDocument);
@@ -74,7 +92,7 @@ export class CharactersCollection{
 
     public static getCharacterList(database:Db, accountID:string):Promise<CharacterPreviewDocument[]>{
         return new Promise((resolve, reject) => {
-            database.collection("characters").find({accountID}).toArray()
+            database.collection("characters").find({account_id: accountID}).toArray()
                 .then(characters => {
                     let previews:CharacterPreviewDocument[] = new Array<CharacterPreviewDocument>(characters.length);
 

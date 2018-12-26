@@ -43,7 +43,6 @@ export class GameManager{
         conn.on("error", err => {
             // handle? 
             console.log(err.message);
-            this.removeClient(client);
         });
 
         conn.on("close", () => this.removeClient(client));
@@ -121,7 +120,6 @@ export class GameManager{
 
         this._database.getAccount(username, password)
             .then(account => {
-                console.log(account);
                 client.setAccountData(account);
                 client.send(OpCode.ACCOUNT_LOGIN, {clientID: client.clientID}, Status.GOOD);
             }) 
@@ -145,7 +143,7 @@ export class GameManager{
         }
 
         this._database.getCharacterList(client.accountID)
-            .then(list => client.send(OpCode.CHARACTER_LIST, list, Status.GOOD))
+            .then(characterList => client.send(OpCode.CHARACTER_LIST, {characterList}, Status.GOOD))
             .catch(err => client.send(OpCode.CHARACTER_LIST, err.message, Status.BAD))
     }
 
@@ -181,7 +179,7 @@ export class GameManager{
         }
 
         this._database.createCharacter(client.accountID, archetypeID, name, skin)
-            .then(report => client.send(OpCode.CHARACTER_CREATE, report, Status.GOOD))
+            .then(message => client.send(OpCode.CHARACTER_CREATE, message, Status.GOOD))
             .catch(err => client.send(OpCode.CHARACTER_CREATE, err.message, Status.BAD));
     }
 
