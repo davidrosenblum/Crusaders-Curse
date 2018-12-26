@@ -1,8 +1,13 @@
-import { BaseCombatObject, BaseCombatObjectConfig, CombatResistance, CombatDefense } from "./BaseCombatObject";
+import { BaseCombatObject, BaseCombatObjectConfig, CombatResistance, CombatDefense, BaseCombatStats } from "./BaseCombatObject";
 import { DamageType, AttackType } from "../data/Data";
 import { RNG } from "../utils/RNG";
 
 export interface CombatObjectConfig extends BaseCombatObjectConfig{}
+
+export interface CombatStats extends BaseCombatStats{
+    health:number;
+    mana:number;
+}
 
 export abstract class CombatObject extends BaseCombatObject{
     public static readonly DAMAGE_MULTIPLIER_CAP:number = 2.75;
@@ -192,6 +197,15 @@ export abstract class CombatObject extends BaseCombatObject{
         }, duration);
 
         this.emit("combat-update", {damageModifier});
+    }
+
+    public getCombatStats():CombatStats{
+        let stats:any = this.getBaseCombatStats();
+
+        stats.health = this.health;
+        stats.mana = this.mana;
+
+        return stats as CombatStats;
     }
 
     public get healthModifier():number{

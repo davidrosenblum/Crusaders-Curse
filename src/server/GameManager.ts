@@ -8,6 +8,9 @@ import { CharacterDocument } from "../database/collections/CharactersCollection"
 import { GameMapFactory } from "../maps/GameMapFactory";
 import { GameMapOpen } from "../maps/GameMapOpen";
 import { GameMapInstance } from "../maps/GameMapInstance";
+import { GameMap } from "../maps/GameMap";
+import { CasterObject } from "../entities/CasterObject";
+import { CombatStats } from "../entities/CombatObject";
 
 export class GameManager{
     public static readonly CLIENT_VERSION_REQUIRED:string = "0.1.0";
@@ -31,13 +34,16 @@ export class GameManager{
     public createClient(conn:websocket.connection):void{
         let client:GameClient = new GameClient(conn);
 
+        console.log(`Client-${client.clientID} connected.`);
         conn.on("message", data => {
+            console.log(data.utf8Data);
             GameClient.parseRequests(client, data, this.handlClientRequest.bind(this));
         });
 
         conn.on("error", err => {
             // handle? 
             console.log(err.message);
+            this.removeClient(client);
         });
 
         conn.on("close", () => this.removeClient(client));
@@ -81,6 +87,9 @@ export class GameManager{
             case OpCode.CHAT_MESSAGE:
                 this.processChat(client, data);
                 break;
+            case OpCode.OBJECT_STATS:
+                this.processStats(client, data);
+                break;
             default:
                 client.send(OpCode.INVALID_OPCODE, "Invalid OpCode", Status.BAD);
                 break;
@@ -112,6 +121,7 @@ export class GameManager{
 
         this._database.getAccount(username, password)
             .then(account => {
+                console.log(account);
                 client.setAccountData(account);
                 client.send(OpCode.ACCOUNT_LOGIN, {clientID: client.clientID}, Status.GOOD);
             }) 
@@ -120,7 +130,7 @@ export class GameManager{
 
     private processLogout(client:GameClient):void{
         if(!client.hasAccountData){
-            client.send(OpCode.ACCOUNT_LOGOUT, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.ACCOUNT_LOGOUT, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -130,7 +140,7 @@ export class GameManager{
 
     private processCharacterList(client:GameClient):void{
         if(!client.hasAccountData){
-            client.send(OpCode.CHARACTER_LIST, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.CHARACTER_LIST, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -141,7 +151,7 @@ export class GameManager{
 
     private processCharacterCreate(client:GameClient, data:any):void{
         if(!client.hasAccountData){
-            client.send(OpCode.CHARACTER_CREATE, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.CHARACTER_CREATE, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -177,7 +187,7 @@ export class GameManager{
 
     private processCharacterSelect(client:GameClient, data:any):void{
         if(!client.hasAccountData){
-            client.send(OpCode.CHARACTER_SELECT, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.CHARACTER_SELECT, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -203,7 +213,7 @@ export class GameManager{
 
     private processMapEnter(client:GameClient, data:any):void{
         if(!client.hasAccountData || !client.playerName){
-            client.send(OpCode.ENTER_MAP, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.ENTER_MAP, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -234,7 +244,7 @@ export class GameManager{
 
     private processInstanceEnter(client:GameClient, data:any):void{
         if(!client.hasAccountData || !client.playerName){
-            client.send(OpCode.ENTER_INSTANCE, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.ENTER_INSTANCE, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -281,7 +291,7 @@ export class GameManager{
 
     private processChat(client:GameClient, data:any):void{
         if(!client.hasAccountData || !client.playerName){
-            client.send(OpCode.CHAT_MESSAGE, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.CHAT_MESSAGE, "Account is not logged in.", Status.BAD);
             return;
         }
 
@@ -297,22 +307,51 @@ export class GameManager{
         }  
     } 
 
-    private processStats():void{
-
-    }
-
-    private processPotionList(client:GameClient):void{
+    private processStats(client:GameClient, data:any):void{
         if(!client.hasAccountData || !client.player){
-            client.send(OpCode.POTION_LIST, "Account are not logged in.", Status.BAD);
+            client.send(OpCode.OBJECT_STATS, "Account is not logged in.", Status.BAD);
             return;
         }
 
+        let {objectID=null} = data;
 
+        if(!objectID){
+            client.send(OpCode.OBJECT_STATS, "Invalid json request - missing objectID.", Status.BAD);
+            return;
+        }
+
+        let map:GameMap = client.player.map;
+        if(map){
+            let stats:CombatStats = client.player.map.getUnitStats(objectID);
+
+            if(stats){
+                client.send(OpCode.OBJECT_STATS, stats, Status.GOOD);
+            }
+            else{
+                client.send(OpCode.OBJECT_STATS, "Invalid target ID.", Status.BAD);
+            }
+        }
+        else{
+            client.send(OpCode.OBJECT_STATS, "You are not in a map.", Status.BAD);
+        }
+        
+    }
+
+    private processPotionList(client:GameClient):void{
+        if(!client.player){
+            client.send(OpCode.POTION_LIST, "Account is not logged in.", Status.BAD);
+            return;
+        }
+
+        client.send(OpCode.POTION_LIST, {}, Status.GOOD);
     }
 
 
-    private processAbilityList():void{
-
+    private processAbilityList(client:GameClient):void{
+        if(!client.player){
+            client.send(OpCode.ABILITY_LIST, "Account is not logged in.", Status.BAD);
+            return;
+        }
     }
 
     private loadPlayer(client:GameClient):Promise<CharacterDocument>{

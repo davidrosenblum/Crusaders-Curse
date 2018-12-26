@@ -23,7 +23,7 @@ export interface CharacterDocumentLastMap{
 }
 
 export interface CharacterDocument{
-    account_id:number;
+    account_id:string;
     name:string;
     level:number;
     xp:number;
@@ -37,7 +37,7 @@ export interface CharacterDocument{
 }
 
 export class CharactersCollection{
-    public static createCharacter(database:Db, accountID:number, archetypeID:number, name:string, skin:number=1):Promise<InsertOneWriteOpResult>{
+    public static createCharacter(database:Db, accountID:string, archetypeID:number, name:string, skin:number=1):Promise<InsertOneWriteOpResult>{
         let characterDoc:CharacterDocument = {
             account_id: accountID,
             name,
@@ -55,11 +55,11 @@ export class CharactersCollection{
         return database.collection("characters").insertOne(characterDoc);
     }
 
-    public static deleteCharacter(database:Db, accountID:number, name:string):Promise<DeleteWriteOpResultObject>{
+    public static deleteCharacter(database:Db, accountID:string, name:string):Promise<DeleteWriteOpResultObject>{
         return database.collection("characters").deleteOne({account_id: accountID, name});
     }
 
-    public static getCharacter(database:Db, accountID:number, name:string):Promise<CharacterDocument>{
+    public static getCharacter(database:Db, accountID:string, name:string):Promise<CharacterDocument>{
         return new Promise((resolve, reject) => {
             database.collection("characters").findOne({accountID, name})
                 .then(data => {
@@ -72,7 +72,7 @@ export class CharactersCollection{
         });
     }
 
-    public static getCharacterList(database:Db, accountID:number):Promise<CharacterPreviewDocument[]>{
+    public static getCharacterList(database:Db, accountID:string):Promise<CharacterPreviewDocument[]>{
         return new Promise((resolve, reject) => {
             database.collection("characters").find({accountID}).toArray()
                 .then(characters => {

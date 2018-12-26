@@ -10,6 +10,17 @@ export interface BaseCombatObjectConfig extends GameObjectConfig{
     resistance?:CombatResistance;
 }
 
+export interface BaseCombatStats{
+    baseHealth:number;
+    baseHealthRegen:number;
+    baseMana:number;
+    baseManaRegen:number;
+    baseMeleeDefense:number;
+    baseRangedDefense:number;
+    basePhysicalResistance:number;
+    baseMagicalResistance:number;
+}
+
 export interface CombatDefense{
     melee:number;
     ranged:number;
@@ -51,6 +62,19 @@ export abstract class BaseCombatObject extends GameObject{
         this._baseResistance = {physical: 0, magical: 0};
         this.basePhysicalResistance = config.resistance.physical || 0;
         this.baseMagicalResistance = config.resistance.magical || 0;
+    }
+
+    public getBaseCombatStats():BaseCombatStats{
+        return {
+            baseHealth:             this.baseHealth,
+            baseHealthRegen:        this.baseHealthRegen,
+            baseMana:               this.baseMana,
+            baseManaRegen:          this.baseManaRegen,
+            baseMeleeDefense:       this.baseMeleeDefense,
+            baseRangedDefense:      this.baseRangedDefense,
+            basePhysicalResistance: this.basePhysicalResistance,
+            baseMagicalResistance:  this.baseMagicalResistance
+        };
     }
 
     public set baseHealth(baseHealth:number){
