@@ -21,6 +21,9 @@ export declare class GameManager {
     private processMapEnter;
     private processInstanceEnter;
     private processChat;
+    private processStats;
+    private processPotionList;
+    private processAbilityList;
     private loadPlayer;
     private adminCommand;
     readonly numClients: number;

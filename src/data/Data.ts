@@ -137,6 +137,7 @@ export const enum OpCode{
     PARTY_DECLINE =         24,
     PARTY_LEAVE =           25,
     PARTY_UPDATE =          26,
+    SKIN_CHANGE =           27,
     INVALID_OPCODE =        99
 }
 
