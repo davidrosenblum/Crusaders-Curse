@@ -13,6 +13,14 @@ class NavDispatcher extends EventEmitter{
         this.emit("show-menu", {menu: "login"});
     }
 
+    showCharacterSelect(){
+        this.emit("show-menu", {menu: "character-select"});
+    }
+    
+    showCharacterCreate(){
+        this.emit("show-menu", {menu: "character-create"});
+    }
+
     showGame(){
         this.emit("show-menu", {menu: "game"});
     }

@@ -33,19 +33,19 @@ export class DBController{
         return AccountsCollection.getAccount(this._database, username, password);
     }
 
-    public createCharacter(accountID:number, archetypeID:number, name:string, skin?:number):Promise<InsertOneWriteOpResult>{
+    public createCharacter(accountID:string, archetypeID:number, name:string, skin?:number):Promise<InsertOneWriteOpResult>{
         return CharactersCollection.createCharacter(this._database, accountID, archetypeID, name, skin);
     }
 
-    public deleteCharacter(accountID:number, name:string):Promise<DeleteWriteOpResultObject>{
+    public deleteCharacter(accountID:string, name:string):Promise<DeleteWriteOpResultObject>{
         return CharactersCollection.deleteCharacter(this._database, accountID, name);
     }
 
-    public getCharacter(accountID:number, name:string):Promise<CharacterDocument>{
+    public getCharacter(accountID:string, name:string):Promise<CharacterDocument>{
         return CharactersCollection.getCharacter(this._database, accountID, name);
     }
 
-    public getCharacterList(accountID:number):Promise<CharacterPreviewDocument[]>{
+    public getCharacterList(accountID:string):Promise<CharacterPreviewDocument[]>{
         return CharactersCollection.getCharacterList(this._database, accountID);
     }
 

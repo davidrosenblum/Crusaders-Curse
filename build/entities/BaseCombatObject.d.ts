@@ -8,6 +8,16 @@ export interface BaseCombatObjectConfig extends GameObjectConfig {
     defense?: CombatDefense;
     resistance?: CombatResistance;
 }
+export interface BaseCombatStats {
+    baseHealth: number;
+    baseHealthRegen: number;
+    baseMana: number;
+    baseManaRegen: number;
+    baseMeleeDefense: number;
+    baseRangedDefense: number;
+    basePhysicalResistance: number;
+    baseMagicalResistance: number;
+}
 export interface CombatDefense {
     melee: number;
     ranged: number;
@@ -30,6 +40,7 @@ export declare abstract class BaseCombatObject extends GameObject {
     private _baseDefense;
     private _baseResistance;
     constructor(config: BaseCombatObjectConfig);
+    getBaseCombatStats(): BaseCombatStats;
     baseHealth: number;
     baseHealthRegen: number;
     baseMana: number;

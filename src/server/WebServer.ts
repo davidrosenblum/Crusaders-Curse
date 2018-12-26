@@ -33,7 +33,6 @@ export class WebServer{
 
     private onWebSocket(request:websocket.request):void{
         let conn:websocket.connection = request.accept(null, request.origin);
-        
         this._game.createClient(conn);
     }
 

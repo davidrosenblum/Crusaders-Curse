@@ -1,15 +1,15 @@
 export class AccountData{
-    private _accountID:number;
+    private _accountID:string;
     private _username:string;
     private _accessLevel:number;
 
-    constructor(accountID:number, username:string, accessLevel:number){
+    constructor(accountID:string, username:string, accessLevel:number){
         this._accountID = accountID;
         this._username = username;
         this._accessLevel = accessLevel;
     }
 
-    public get accountID():number{
+    public get accountID():string{
         return this._accountID;
     }
 

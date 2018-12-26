@@ -4,6 +4,7 @@ import { CasterObject } from "../entities/CasterObject";
 import { TransportNode, TransportNodeFullState, TransportNodeType } from "./TransportNode";
 import { OpCode, Status, MapData } from "../data/Data";
 import { GameObjectFullState } from "../entities/GameObject";
+import { CombatStats } from "../entities/CombatObject";
 
 export interface GameMapFullState{
     transportNodes:TransportNodeFullState[];
@@ -103,6 +104,15 @@ export abstract class GameMap extends EventEmitter{
 
     public hasUnit(unit:CasterObject):boolean{
         return unit.objectID in this._units;
+    }
+
+    public getUnitStats(objectID:string):CombatStats{
+        let target:CasterObject = this.getObjectById(objectID);
+        return target ? target.getCombatStats() : null;
+    }
+
+    public getObjectById(objectID:string):CasterObject{
+        return this._units[objectID] || null;
     }
  
     private getState():GameMapFullState{

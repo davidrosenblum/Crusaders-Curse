@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Card, CardBody, Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Banner } from "./Banner";
-import Game from "../game/Game";
+import Client from "../game/Client";
 import NavDispatcher from "../dispatchers/NavDispatcher";
 import ModalDispatcher from "../dispatchers/ModalDispatcher";
 
@@ -12,26 +12,71 @@ export class Login extends React.Component{
         this.usernameInput = null;
         this.passwordInput = null;
         this.submitBtn = null;
+
+        this.clientSubscriptions = {};
+
+        this.state = {
+            message: null
+        };
     }
 
     componentDidMount(){
-        Game.on("login", this.onGameLogin.bind(this));
+        this.clientSubscriptions = {
+            "connect":  this.onClientConnected.bind(this),
+            "close":    this.onClientClosed.bind(this),
+            "login":    this.onClientLogin.bind(this),
+            "error":    this.onClientError.bind(this)
+        };
+
+        for(let type in this.clientSubscriptions){
+            Client.on(type, this.clientSubscriptions[type]);
+        }
+
+        if(!Client.isConnected){
+            this.setInputsDisabled(true);
+            this.setState({message: "Connecting to server..."});
+            Client.connect();
+        }
     }
 
-    onGameLogin(evt){
-        let {status, message} = evt;
-        
-        this.submitBtn.disabled = false;
+    componentWillUnmount(){
+        for(let type in this.clientSubscriptions){
+            Client.removeListener(type, this.clientSubscriptions[type]);
+        }
+    }
 
-        if(status !== 200){
+    onClientConnected(){
+        this.setState({message: null});
+        this.setInputsDisabled(false);
+    }
+
+    onClientClosed(){
+        this.setState({message: "Socket connection error."});
+
+        ModalDispatcher.modal(
+            "Unable to connect to server. The server is probably offline.",
+            "Socket Error"
+        );
+    }
+
+    onClientLogin(evt){
+        let {success, message} = evt;
+
+        if(!success){
+            this.submitBtn.disabled = false;
+
             ModalDispatcher.modal(
-                message || "Invalid username or password.",
+                message || "Wrong username or password.",
                 "Login Error"
             )
         }
         else{
-            NavDispatcher.showGame();
+            NavDispatcher.showCharacterSelect();
         }
+    }
+
+    onClientError(err){
+        ModalDispatcher.modal(err.message, "Socket Error");
     }
 
     onSubmit(evt){
@@ -42,7 +87,13 @@ export class Login extends React.Component{
         let username = this.usernameInput.value,
             password = this.passwordInput.value;
 
-        Game.login(username, password);
+        Client.login(username, password);
+    }
+
+    setInputsDisabled(disabled){
+        this.usernameInput.disabled = disabled;
+        this.passwordInput.disabled = disabled;
+        this.submitBtn.disabled = disabled;
     }
 
     render(){
@@ -77,6 +128,7 @@ export class Login extends React.Component{
                                     <Button color="dark" innerRef={btn => this.submitBtn = btn}>
                                         Submit
                                     </Button>
+                                    {this.state.message}
                                 </FormGroup>
                             </Form>
                         </CardBody>

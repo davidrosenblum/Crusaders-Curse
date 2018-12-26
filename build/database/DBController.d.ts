@@ -7,9 +7,9 @@ export declare class DBController {
     private createCollections;
     createAccount(username: string, password: string, accessLevel?: number): Promise<string>;
     getAccount(username: string, password: string): Promise<AccountData>;
-    createCharacter(accountID: number, archetypeID: number, name: string, skin?: number): Promise<InsertOneWriteOpResult>;
-    deleteCharacter(accountID: number, name: string): Promise<DeleteWriteOpResultObject>;
-    getCharacter(accountID: number, name: string): Promise<CharacterDocument>;
-    getCharacterList(accountID: number): Promise<CharacterPreviewDocument[]>;
+    createCharacter(accountID: string, archetypeID: number, name: string, skin?: number): Promise<InsertOneWriteOpResult>;
+    deleteCharacter(accountID: string, name: string): Promise<DeleteWriteOpResultObject>;
+    getCharacter(accountID: string, name: string): Promise<CharacterDocument>;
+    getCharacterList(accountID: string): Promise<CharacterPreviewDocument[]>;
     updateCharacter(data: CharacterDocument): Promise<FindAndModifyWriteOpResultObject>;
 }

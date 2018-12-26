@@ -18,7 +18,7 @@ export interface CharacterDocumentLastMap {
     y: number;
 }
 export interface CharacterDocument {
-    account_id: number;
+    account_id: string;
     name: string;
     level: number;
     xp: number;
@@ -33,9 +33,9 @@ export interface CharacterDocument {
     skin: number;
 }
 export declare class CharactersCollection {
-    static createCharacter(database: Db, accountID: number, archetypeID: number, name: string, skin?: number): Promise<InsertOneWriteOpResult>;
-    static deleteCharacter(database: Db, accountID: number, name: string): Promise<DeleteWriteOpResultObject>;
-    static getCharacter(database: Db, accountID: number, name: string): Promise<CharacterDocument>;
-    static getCharacterList(database: Db, accountID: number): Promise<CharacterPreviewDocument[]>;
+    static createCharacter(database: Db, accountID: string, archetypeID: number, name: string, skin?: number): Promise<InsertOneWriteOpResult>;
+    static deleteCharacter(database: Db, accountID: string, name: string): Promise<DeleteWriteOpResultObject>;
+    static getCharacter(database: Db, accountID: string, name: string): Promise<CharacterDocument>;
+    static getCharacterList(database: Db, accountID: string): Promise<CharacterPreviewDocument[]>;
     static updateCharacter(database: Db, data: CharacterDocument): Promise<FindAndModifyWriteOpResultObject>;
 }

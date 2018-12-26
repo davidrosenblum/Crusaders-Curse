@@ -42,7 +42,7 @@ export class GameClient{
     }
 
     public sendString(string:string, delimit:boolean=true):void{
-        delimit ? this._conn.send(`string${GameClient.MSG_DELIM}`) : this._conn.send(string);
+        delimit ? this._conn.send(`${string}${GameClient.MSG_DELIM}`) : this._conn.send(string);
     }
 
     public setAccountData(accountData:AccountData):void{
@@ -57,8 +57,8 @@ export class GameClient{
         return this._accountData ? this._accountData.username : null;
     }
 
-    public get accountID():number{
-        return this._accountData ? this._accountData.accountID : -1;
+    public get accountID():string{
+        return this._accountData ? this._accountData.accountID : null;
     }
 
     public get accessLevel():number{
@@ -66,7 +66,7 @@ export class GameClient{
     }
 
     public get hasAccountData():boolean{
-        return this._accountData = null;
+        return this._accountData !== null;
     }
 
     public get playerName():string{

@@ -1,6 +1,10 @@
-import { BaseCombatObject, BaseCombatObjectConfig } from "./BaseCombatObject";
+import { BaseCombatObject, BaseCombatObjectConfig, BaseCombatStats } from "./BaseCombatObject";
 import { DamageType, AttackType } from "../data/Data";
 export interface CombatObjectConfig extends BaseCombatObjectConfig {
+}
+export interface CombatStats extends BaseCombatStats {
+    health: number;
+    mana: number;
 }
 export declare abstract class CombatObject extends BaseCombatObject {
     static readonly DAMAGE_MULTIPLIER_CAP: number;
@@ -30,6 +34,7 @@ export declare abstract class CombatObject extends BaseCombatObject {
     modifyDefense(defenseModifier: number, defenseType: AttackType | "all", duration?: number): void;
     modifyResistance(resistanceModifier: number, resistanceType: DamageType | "all", duration?: number): void;
     modifyDamage(damageModifier: number, duration?: number): void;
+    getCombatStats(): CombatStats;
     readonly healthModifier: number;
     readonly healthRegenModifier: number;
     readonly manaModifier: number;
