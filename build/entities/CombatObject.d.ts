@@ -6,6 +6,7 @@ export declare abstract class CombatObject extends BaseCombatObject {
     static readonly DAMAGE_MULTIPLIER_CAP: number;
     static readonly DEFAULT_DURATION: number;
     static readonly DEFENSE_ROLL_REQUIRED: number;
+    static readonly REGEN_INTERVAL: number;
     private _health;
     private _mana;
     private _healthModifier;
@@ -16,8 +17,11 @@ export declare abstract class CombatObject extends BaseCombatObject {
     private _resistanceModifier;
     private _damageMultiplier;
     constructor(config: CombatObjectConfig);
-    takeDamage(damage: number, damageType: DamageType): boolean;
+    takeDamage(damage: number, damageType: DamageType, ignoreDefense?: boolean, ignoreResistance?: boolean): boolean;
     rollDefense(attackType?: AttackType): boolean;
+    addHealth(health: number): void;
+    addMana(mana: number): void;
+    useMana(mana: number): boolean;
     resetModifiers(): void;
     modifyHealth(healthModifier: number, duration?: number): void;
     modifyHealthRegen(healthRegenModifier: number, duration?: number): void;

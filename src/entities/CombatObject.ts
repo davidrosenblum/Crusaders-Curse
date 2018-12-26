@@ -8,6 +8,7 @@ export abstract class CombatObject extends BaseCombatObject{
     public static readonly DAMAGE_MULTIPLIER_CAP:number = 2.75;
     public static readonly DEFAULT_DURATION:number = 5000;
     public static readonly DEFENSE_ROLL_REQUIRED:number = 0.85;
+    public static readonly REGEN_INTERVAL:number = 1000;
 
     private _health:number;
     private _mana:number;
@@ -27,13 +28,15 @@ export abstract class CombatObject extends BaseCombatObject{
         this.resetModifiers();
     }
 
-    public takeDamage(damage:number, damageType:DamageType):boolean{
-        if(!this.rollDefense()){
-            if(damageType === DamageType.PHYSICAL){
-                damage -= (damage * this.physicalResistance);
-            }
-            else if(damageType === DamageType.MAGICAL){
-                damage -= (damage * this.magicalResistance);
+    public takeDamage(damage:number, damageType:DamageType, ignoreDefense:boolean=false, ignoreResistance:boolean=false):boolean{
+        if(ignoreDefense || !this.rollDefense()){
+            if(!ignoreResistance){
+                if(damageType === DamageType.PHYSICAL){
+                    damage -= (damage * this.physicalResistance);
+                }
+                else if(damageType === DamageType.MAGICAL){
+                    damage -= (damage * this.magicalResistance);
+                }
             }
 
             this._health -= damage;
@@ -62,6 +65,34 @@ export abstract class CombatObject extends BaseCombatObject{
         }
 
         return RNG.nextNum() + modifier >= CombatObject.DEFENSE_ROLL_REQUIRED;
+    }
+
+    public addHealth(health:number):void{
+        if(health > 0){
+            this._health += health;
+
+            if(this._health >= this.healthCap){
+                this._health = this.healthCap;
+            }
+        }   
+    }
+
+    public addMana(mana:number):void{
+        if(mana > 0){
+            this._mana += mana;
+            
+            if(this._mana >= this.manaCap){
+                this._mana = this.manaCap;
+            }
+        }   
+    }
+
+    public useMana(mana:number):boolean{
+        if(this.mana >= mana){
+            this._mana -= mana;
+            return true;
+        }
+        return false;
     }
 
     public resetModifiers():void{

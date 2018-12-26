@@ -49,6 +49,7 @@ export declare abstract class GameObject extends EventEmitter {
     private _moveSpeed;
     private _stunned;
     constructor(config: GameObjectConfig);
+    inRange(target: GameObject, range: number): boolean;
     setState(state: GameObjectState): void;
     getState(): GameObjectFullState;
     teamID: string;

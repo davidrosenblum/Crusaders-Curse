@@ -12,5 +12,12 @@ export declare abstract class CasterObject extends CombatObject {
     learnAbility(abilityName: string, level?: number): void;
     hasAbility(abilityName: string): boolean;
     setMap(map: GameMap): void;
+    getAbilityList(): {
+        [ability: string]: {
+            name: string;
+            level: number;
+            recharge: number;
+        };
+    };
     readonly map: GameMap;
 }

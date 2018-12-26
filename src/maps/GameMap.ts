@@ -38,7 +38,7 @@ export abstract class GameMap extends EventEmitter{
         this.bulkUpdate(OpCode.CHAT_MESSAGE, {chat, from}, Status.GOOD);
     }
 
-    public addClient(client:GameClient, successBeforePlayer?:(done:Function)=>any):void{
+    public addClient(client:GameClient, successBeforePlayerAdd?:(done:Function)=>any):void{
         if(!this.hasClient(client)){
             this._clients[client.clientID] = client;
             this._numClients++;
@@ -46,8 +46,8 @@ export abstract class GameMap extends EventEmitter{
             let mapState:GameMapFullState = this.getState();
             client.send(OpCode.ENTER_MAP, mapState, Status.GOOD);
 
-            if(successBeforePlayer){
-                successBeforePlayer(() => this.addUnit(client.player));
+            if(successBeforePlayerAdd){
+                successBeforePlayerAdd(() => this.addUnit(client.player));
             }
             else{
                 this.addUnit(client.player);

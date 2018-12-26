@@ -297,6 +297,24 @@ export class GameManager{
         }  
     } 
 
+    private processStats():void{
+
+    }
+
+    private processPotionList(client:GameClient):void{
+        if(!client.hasAccountData || !client.player){
+            client.send(OpCode.POTION_LIST, "Account are not logged in.", Status.BAD);
+            return;
+        }
+
+
+    }
+
+
+    private processAbilityList():void{
+
+    }
+
     private loadPlayer(client:GameClient):Promise<CharacterDocument>{
         return new Promise((resolve, reject) => {
             this._database.getCharacter(client.accountID, client.playerName)

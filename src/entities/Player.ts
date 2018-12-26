@@ -6,9 +6,18 @@ export interface PlayerConfig extends CasterObjectConfig{
     archetype:string;
 }
 
+export interface Potions{
+    health:number;
+    mana:number;
+    rage:number;
+    luck:number;
+    protection:number;
+}
+
 export class Player extends CasterObject{
     public static readonly LEVEL_CAP:number = 50;
     public static readonly GOLD_CAP:number = 999999;
+    public static readonly POTIONS_CAP:number = 9;
 
     private _level:number;
     private _xp:number;
@@ -16,6 +25,7 @@ export class Player extends CasterObject{
     private _gold:number;
     private _abilityPoints:number;
     private _archetype:string;
+    private _potions:Potions;
 
     constructor(saveData:CharacterDocument, config:PlayerConfig){
         super(config);
@@ -26,6 +36,13 @@ export class Player extends CasterObject{
         this._gold = Math.min(0, Math.max(saveData.gold, Player.GOLD_CAP));
         this._abilityPoints = Math.min(0, Math.max(saveData.ability_points, Player.LEVEL_CAP - this.level - 1));
         this._archetype = config.archetype;
+        this._potions = {
+            health:     Math.min(0, Math.max(saveData.potions.health, Player.POTIONS_CAP)),
+            mana:       Math.min(0, Math.max(saveData.potions.mana, Player.POTIONS_CAP)),
+            rage:       Math.min(0, Math.max(saveData.potions.rage, Player.POTIONS_CAP)),
+            luck:       Math.min(0, Math.max(saveData.potions.luck, Player.POTIONS_CAP)),
+            protection: Math.min(0, Math.max(saveData.potions.protection, Player.POTIONS_CAP))
+        }
     }
 
     private calcXPNeeded():number{
@@ -63,6 +80,16 @@ export class Player extends CasterObject{
     public addGold(gold:number):void{
         this._gold = Math.min(this.gold + gold, Player.GOLD_CAP);
         this.emit("gold", {gold});
+    }
+
+    public getPotionsList():Potions{
+        return {
+            health:     this._potions.health,
+            mana:       this._potions.mana,
+            rage:       this._potions.rage,
+            luck:       this._potions.luck,
+            protection: this._potions.protection
+        };
     }
 
     public get xpToGo():number{

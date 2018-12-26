@@ -70,6 +70,15 @@ export abstract class GameObject extends EventEmitter{
         this.isStunned = false;
     }
 
+    public inRange(target:GameObject, range:number):boolean{
+        if(target.x < this.x + range && this.x < target.x + range){
+            if(target.y < this.y + range && this.y < target.y + range){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public setState(state:GameObjectState):void{
         let {
             x=this.x,

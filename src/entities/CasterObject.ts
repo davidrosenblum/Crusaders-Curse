@@ -1,12 +1,13 @@
 import { CombatObject, CombatObjectConfig } from "./CombatObject";
 import { GameMap } from "../maps/GameMap";
+import { Ability } from "../abilities/Ability";
 
 export interface CasterObjectConfig extends CombatObjectConfig{
     abilities:{[ability:string]: number};
 }
 
 export abstract class CasterObject extends CombatObject{
-    private _abilities:{[abiliy:string]: number};
+    private _abilities:{[ability:string]: Ability};
     private _map:GameMap;
 
     constructor(config:CasterObjectConfig){
@@ -35,6 +36,22 @@ export abstract class CasterObject extends CombatObject{
         if(map.addUnit(this)){
             this._map = map;
         }
+    }
+
+    public getAbilityList():{[ability:string]: {name:string, level:number, recharge:number}}{
+        let abilityList = {};
+
+        for(let abilityName in this._abilities){
+            let currAbility:Ability = this._abilities[abilityName];
+
+            abilityList[abilityName] = {
+                name:       currAbility.name,
+                level:      currAbility.level,
+                recharge:   currAbility.recharge
+            };
+        }
+
+        return abilityList;
     }
 
     public get map():GameMap{
