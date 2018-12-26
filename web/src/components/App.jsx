@@ -6,6 +6,8 @@ import { Login } from "./Login";
 import { Navigation } from "./Navigation";
 import { Footer } from "./Footer";
 import { MenuModal } from "./MenuModal";
+import { CharacterSelect } from "./CharacterSelect";
+import { CharacterCreate } from "./CharacterCreate";
 import NavDispatcher from "../dispatchers/NavDispatcher";
 
 export class App extends React.Component{
@@ -25,28 +27,40 @@ export class App extends React.Component{
         this.setState({menu: evt.menu});
     }
 
-    renderCurrentMenu(){
-        let menu = null;
+    renderNav(){
+        switch(this.state.menu){
+            case "game":
+                return null;
+            case "character-create":
+                return null;
+            case "character-select":
+                return null;
+            default:
+                return <Navigation/>
+        }
+    }
 
+    renderCurrentMenu(){
         switch(this.state.menu){
             case "landing":
-                menu = <Landing/>
-                break;
+                return <Landing/>;
             case "register":
-                menu = <Register/>
-                break;
+                return <Register/>;
             case "login":
-                menu = <Login/>
-                break;
+                return <Login/>;
+            case "character-select":
+                return <CharacterSelect/>;
+            case "character-create":
+                return <CharacterCreate/>;
+            default:
+                return null;
         }
-
-        return menu;
     }
 
     render(){
         return (
             <div>
-                {this.state.menu !== "game" ? <Navigation/> : null}
+                {this.renderNav()}
                 {this.renderCurrentMenu()}
                 <br/>
                 <Footer/>     
