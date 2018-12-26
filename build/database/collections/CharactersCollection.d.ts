@@ -1,4 +1,4 @@
-import { Db, InsertOneWriteOpResult, DeleteWriteOpResultObject, FindAndModifyWriteOpResultObject } from "mongodb";
+import { Db, FindAndModifyWriteOpResultObject } from "mongodb";
 export interface CharacterPreviewDocument {
     name: string;
     level: number;
@@ -33,8 +33,8 @@ export interface CharacterDocument {
     skin: number;
 }
 export declare class CharactersCollection {
-    static createCharacter(database: Db, accountID: string, archetypeID: number, name: string, skin?: number): Promise<InsertOneWriteOpResult>;
-    static deleteCharacter(database: Db, accountID: string, name: string): Promise<DeleteWriteOpResultObject>;
+    static createCharacter(database: Db, accountID: string, archetypeID: number, name: string, skin?: number): Promise<string>;
+    static deleteCharacter(database: Db, accountID: string, name: string): Promise<string>;
     static getCharacter(database: Db, accountID: string, name: string): Promise<CharacterDocument>;
     static getCharacterList(database: Db, accountID: string): Promise<CharacterPreviewDocument[]>;
     static updateCharacter(database: Db, data: CharacterDocument): Promise<FindAndModifyWriteOpResultObject>;

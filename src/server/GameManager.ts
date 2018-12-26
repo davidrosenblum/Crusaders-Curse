@@ -120,7 +120,6 @@ export class GameManager{
 
         this._database.getAccount(username, password)
             .then(account => {
-                console.log(account);
                 client.setAccountData(account);
                 client.send(OpCode.ACCOUNT_LOGIN, {clientID: client.clientID}, Status.GOOD);
             }) 

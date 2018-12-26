@@ -1,4 +1,4 @@
-import { Db, InsertOneWriteOpResult, DeleteWriteOpResultObject, FindAndModifyWriteOpResultObject } from "mongodb";
+import { Db, FindAndModifyWriteOpResultObject } from "mongodb";
 import { AccountData } from "./AccountData";
 import { AccountsCollection } from "./collections/AccountsCollection";
 import { CharactersCollection, CharacterDocument, CharacterPreviewDocument } from "./collections/CharactersCollection";
@@ -33,11 +33,11 @@ export class DBController{
         return AccountsCollection.getAccount(this._database, username, password);
     }
 
-    public createCharacter(accountID:string, archetypeID:number, name:string, skin?:number):Promise<InsertOneWriteOpResult>{
+    public createCharacter(accountID:string, archetypeID:number, name:string, skin?:number):Promise<string>{
         return CharactersCollection.createCharacter(this._database, accountID, archetypeID, name, skin);
     }
 
-    public deleteCharacter(accountID:string, name:string):Promise<DeleteWriteOpResultObject>{
+    public deleteCharacter(accountID:string, name:string):Promise<string>{
         return CharactersCollection.deleteCharacter(this._database, accountID, name);
     }
 
