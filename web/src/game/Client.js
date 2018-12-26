@@ -83,7 +83,7 @@ class Client extends EventEmitter{
 
     handeCharacterList(data, status){
         if(status === Status.GOOD){
-            this.emit("character-list", {characterList: data.characterList, success: true});
+            this.emit("character-list", {characterList: data, success: true});
         }
         else this.emit("character-list", {message: data.message, success: false});
     }

@@ -13,24 +13,45 @@ export class Login extends React.Component{
         this.passwordInput = null;
         this.submitBtn = null;
 
-        this.clientSubscriptions = {};
-
         this.state = {
             message: null
+        };
+
+        this.onClientConnected = () => {
+            this.setState({message: null});
+            this.setInputsDisabled(false);
+        };
+
+        this.onClientClosed = () => {
+            this.setState({message: "Socket connection error."});
+
+            ModalDispatcher.modal(
+                "Unable to connect to server. The server is probably offline.",
+                "Socket Error"
+            );
+        };
+
+        this.onClientLogin = evt => {
+            let {success, message} = evt;
+
+            if(!success){
+                this.submitBtn.disabled = false;
+
+                ModalDispatcher.modal(
+                    message || "Wrong username or password.",
+                    "Login Error"
+                )
+            }
+            else{
+                NavDispatcher.showCharacterSelect();
+            }
         };
     }
 
     componentDidMount(){
-        this.clientSubscriptions = {
-            "connect":  this.onClientConnected.bind(this),
-            "close":    this.onClientClosed.bind(this),
-            "login":    this.onClientLogin.bind(this),
-            "error":    this.onClientError.bind(this)
-        };
-
-        for(let type in this.clientSubscriptions){
-            Client.on(type, this.clientSubscriptions[type]);
-        }
+        Client.on("connect", this.onClientConnected);
+        Client.on("close", this.onClientClosed);
+        Client.on("login", this.onClientLogin);
 
         if(!Client.isConnected){
             this.setInputsDisabled(true);
@@ -40,39 +61,9 @@ export class Login extends React.Component{
     }
 
     componentWillUnmount(){
-        for(let type in this.clientSubscriptions){
-            Client.removeListener(type, this.clientSubscriptions[type]);
-        }
-    }
-
-    onClientConnected(){
-        this.setState({message: null});
-        this.setInputsDisabled(false);
-    }
-
-    onClientClosed(){
-        this.setState({message: "Socket connection error."});
-
-        ModalDispatcher.modal(
-            "Unable to connect to server. The server is probably offline.",
-            "Socket Error"
-        );
-    }
-
-    onClientLogin(evt){
-        let {success, message} = evt;
-
-        if(!success){
-            this.submitBtn.disabled = false;
-
-            ModalDispatcher.modal(
-                message || "Wrong username or password.",
-                "Login Error"
-            )
-        }
-        else{
-            NavDispatcher.showCharacterSelect();
-        }
+        Client.removeListener("connect", this.onClientConnected);
+        Client.removeListener("close", this.onClientClosed);
+        Client.removeListener("login", this.onClientLogin);
     }
 
     onClientError(err){
@@ -85,6 +76,7 @@ export class Login extends React.Component{
         this.submitBtn.disabled = true;
         
         let username = this.usernameInput.value,
+
             password = this.passwordInput.value;
 
         Client.login(username, password);

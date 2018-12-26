@@ -6,22 +6,27 @@ import { Banner } from "./Banner";
 
 export class CharacterSelect extends React.Component{
      constructor(props){
-         super(props);
+        super(props);
 
-         this.state = {
-             characterList: null
-         };
+        this.state = {
+            characterList: null
+        }; 
+
+        this.onCharacterList = evt => {
+            if(evt.success){
+                this.setState({characterList: evt.characterList});
+            }
+        };
      }
 
      componentDidMount(){
-        Client.on("character-list", this.onCharacterList.bind(this));
+        Client.on("character-list", this.onCharacterList);
 
         Client.getCharacterList();
      }
 
-     onCharacterList(evt){
-        let characterList = evt.characterList || [];
-        this.setState({characterList});
+     componentWillUnmount(){
+        Client.removeListener("character-list", this.onCharacterList);
      }
 
      onCreate(){
@@ -41,7 +46,7 @@ export class CharacterSelect extends React.Component{
 
             if(row){
                 rows.push(
-                    <tr>
+                    <tr key={i}>
                         <td colSpan={3}>
                             {row.name} - 
                             Level {row.level} {row.archetype}
@@ -54,7 +59,7 @@ export class CharacterSelect extends React.Component{
             }
             else{
                 rows.push(
-                    <tr>
+                    <tr key={i}>
                         <td colSpan={4}>
                             <Button onClick={this.onCreate.bind(this)}>Create</Button>
                         </td>

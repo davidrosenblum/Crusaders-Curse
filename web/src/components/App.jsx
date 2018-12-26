@@ -9,6 +9,7 @@ import { MenuModal } from "./MenuModal";
 import { CharacterSelect } from "./CharacterSelect";
 import { CharacterCreate } from "./CharacterCreate";
 import NavDispatcher from "../dispatchers/NavDispatcher";
+import Client from "../game/Client";
 
 export class App extends React.Component{
     constructor(props){
@@ -20,24 +21,18 @@ export class App extends React.Component{
     }
 
     componentDidMount(){
-        NavDispatcher.on("show-menu", this.onNavMenu.bind(this));
-    }
-
-    onNavMenu(evt){
-        this.setState({menu: evt.menu});
+        // menu change
+        NavDispatcher.on("show-menu", evt => this.setState({menu: evt.menu}));
     }
 
     renderNav(){
-        switch(this.state.menu){
-            case "game":
-                return null;
-            case "character-create":
-                return null;
-            case "character-select":
-                return null;
-            default:
-                return <Navigation/>
+        let menu = this.state.menu;
+
+        if(menu === "game" || menu === "character-create" || menu === "character-select"){
+            return null;
         }
+
+        return <Navigation/>;
     }
 
     renderCurrentMenu(){
@@ -47,9 +42,9 @@ export class App extends React.Component{
             case "register":
                 return <Register/>;
             case "login":
-                return <Login/>;
+                return <Login connected={this.state.connected}/>;
             case "character-select":
-                return <CharacterSelect/>;
+                return <CharacterSelect characterList={this.state.characterList}/>;
             case "character-create":
                 return <CharacterCreate/>;
             default:
