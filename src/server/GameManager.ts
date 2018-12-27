@@ -27,7 +27,7 @@ export class GameManager{
         this._accounts = {};
         this._clients = {};
         this._numClients = 0;
-        this._maps = {};
+        this._maps = GameMapFactory.createDefaultMaps();
         this._instances = {};
     }
 

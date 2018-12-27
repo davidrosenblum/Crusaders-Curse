@@ -38,7 +38,7 @@ export function getArchetypeName(id:number):string{
 }
 
 export const enum MapType{
-    CITY_OF_KINGS =       1,
+    CENTRAL_CITY =        1,
     HINTERLANDS =         2,
     NORTHERN_RUINS =      3,
     DESERT_OASIS =        4,
@@ -48,8 +48,8 @@ export const enum MapType{
 
 export const getMapName = function(id:number):string{
     switch(id){
-        case MapType.CITY_OF_KINGS:
-            return "City of Kings";
+        case MapType.CENTRAL_CITY:
+            return "Central City";
         case MapType.HINTERLANDS:
             return "Hinterlands";
         case MapType.NORTHERN_RUINS:
@@ -163,13 +163,33 @@ export const enum NPCTier{
     BOSS =      3
 }
 
+export const enum NPCType{
+    GUARD =             "guard",
+    VANGUARD =          "vanguard",
+    ROYAL_GUARD =       "royal-guard",
+    PARAGON =           "paragon",
+    ENFORCER =          "enforcer",
+    ARSONIST =          "arstonist",
+    MARAUDER =          "marauder",
+    RENEGADE_MAGE =     "renegade-mage",
+    OVERSEER =          "overseer",
+    WARRIOR =           "warrior",
+    BRUTE =             "brute",
+    CHIEFTAIN =         "chieftain",
+    REANIMATED_CORPSE = "reanimated-corpse",
+    ANIMUS =            "animus",
+    GRAVE_KNIGHT =      "grave-knight",
+    LICH =              "lich",
+    DEATH_KNIGHT =      "death-knight"
+}
+
 export const enum Team{
-    KINGS_LEGION =  "kings-legion",
-    RAIDERS =       "raiders",
-    ORCS =          "orcs",
-    UNDEAD =        "undead",
-    DEMONS =        "demons",
-    SEPARATISTS =   "separatists",
-    CULTISTS =      "cultists",
-    IMPERIALS =     "imperials"
+    KINGS_LEGION =  "King's Legion",
+    RAIDERS =       "Raiders",
+    ORCS =          "Orcs",
+    UNDEAD =        "Undead",
+    DEMONS =        "Demons",
+    SEPARATISTS =   "Separatists",
+    CULTISTS =      "Cultists",
+    IMPERIALS =     "Imperials"
 }

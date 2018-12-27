@@ -10,5 +10,45 @@ export const MAP_DATA:MapData[] = [
             []
         ],
         foreground: null
+    },
+    {
+        tileSize: 64,
+        background: [
+            []
+        ],
+        midground: [
+            []
+        ],
+        foreground: null
+    },
+    {
+        tileSize: 64,
+        background: [
+            []
+        ],
+        midground: [
+            []
+        ],
+        foreground: null
+    },
+    {
+        tileSize: 64,
+        background: [
+            []
+        ],
+        midground: [
+            []
+        ],
+        foreground: null
+    },
+    {
+        tileSize: 64,
+        background: [
+            []
+        ],
+        midground: [
+            []
+        ],
+        foreground: null
     }
 ];

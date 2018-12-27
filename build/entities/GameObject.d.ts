@@ -1,7 +1,8 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
+import { Team } from "../data/Data";
 export interface GameObjectConfig {
-    teamID?: string;
+    team?: Team;
     name: string;
     type: string;
     x?: number;
@@ -20,7 +21,7 @@ export interface GameObjectState {
 }
 export interface GameObjectFullState {
     objectID: string;
-    teamID: string;
+    team: Team;
     name: string;
     type: string;
     x: number;
@@ -39,7 +40,7 @@ export declare const enum Facing {
 export declare abstract class GameObject extends EventEmitter {
     private static tokenGen;
     private _objectID;
-    private _teamID;
+    private _team;
     private _type;
     private _name;
     private _x;
@@ -52,7 +53,7 @@ export declare abstract class GameObject extends EventEmitter {
     inRange(target: GameObject, range: number): boolean;
     setState(state: GameObjectState): void;
     getState(): GameObjectFullState;
-    teamID: string;
+    team: Team;
     x: number;
     y: number;
     anim: string;

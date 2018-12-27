@@ -2,26 +2,31 @@ import { EventEmitter } from "events";
 import { GameClient } from "../server/GameClient";
 import { CasterObject } from "../entities/CasterObject";
 import { TransportNode, TransportNodeFullState, TransportNodeType } from "./TransportNode";
-import { OpCode, Status, MapData } from "../data/Data";
+import { OpCode, Status, MapData, NPCType } from "../data/Data";
 import { GameObjectFullState } from "../entities/GameObject";
 import { CombatStats } from "../entities/CombatObject";
+import { NPC } from "../entities/NPC";
+import { NPCFactory, NPCOptions } from "../entities/NPCFactory";
 
 export interface GameMapFullState{
+    name:string;
     transportNodes:TransportNodeFullState[];
     units:GameObjectFullState[];
     mapData:MapData;
 }
 
 export abstract class GameMap extends EventEmitter{
+    private _name:string;
     private _mapData:MapData;
     private _clients:{[id:string]: GameClient};
     private _units:{[id:string]: CasterObject};
     private _transportNodes:{[id:string]: TransportNode};
     private _numClients:number;
 
-    constructor(mapData:MapData){
+    constructor(name:string, mapData:MapData){
         super();
 
+        this._name = name;
         this._mapData = mapData;
         this._clients = {};
         this._units = {};
@@ -45,7 +50,7 @@ export abstract class GameMap extends EventEmitter{
             this._numClients++;
 
             let mapState:GameMapFullState = this.getState();
-            client.send(OpCode.ENTER_MAP, mapState, Status.GOOD);
+            client.send(OpCode.ENTER_MAP, {mapState}, Status.GOOD);
 
             if(successBeforePlayerAdd){
                 successBeforePlayerAdd(() => this.addUnit(client.player));
@@ -76,7 +81,10 @@ export abstract class GameMap extends EventEmitter{
         if(!this.hasUnit(unit)){
             this._units[unit.objectID] = unit;
 
-            this.forEachClient(client => client.send(OpCode.OBJECT_CREATE, unit.getState(), Status.GOOD));
+            unit.setMap(this);
+
+            let object:GameObjectFullState = unit.getState();
+            this.forEachClient(client => client.send(OpCode.OBJECT_CREATE, {object}, Status.GOOD));
 
             return true;
         }
@@ -96,6 +104,14 @@ export abstract class GameMap extends EventEmitter{
         let tnode:TransportNode = new TransportNode(type, text, row, col, outMapID, outX, outY);
 
         this._transportNodes[tnode.nodeID] = tnode;
+    }
+
+    public createNPC(type:NPCType, row:number=0, col:number=0, anim?:string, name?:string):void{
+        let x:number = this._mapData.tileSize * col;
+        let y:number = this._mapData.tileSize * row;
+        
+        let npc:NPC = NPCFactory.createNPC(type, {x, y, name, anim});
+        this.addUnit(npc);
     }
 
     public hasClient(client:GameClient):boolean{
@@ -122,7 +138,7 @@ export abstract class GameMap extends EventEmitter{
         let tnodeStates:TransportNodeFullState[] = [];
         this.forEachTransportNode(tnode => tnodeStates.push(tnode.getState()));
 
-        return {mapData: this._mapData, transportNodes: tnodeStates, units: unitStates};
+        return {name: this.name, mapData: this._mapData, transportNodes: tnodeStates, units: unitStates};
     }
 
     private forEachClient(fn:(client:GameClient, clientID?:string)=>any):void{
@@ -149,5 +165,9 @@ export abstract class GameMap extends EventEmitter{
 
     public get isEmpty():boolean{
         return this.numClients === 0;
+    }
+
+    public get name():string{
+        return this._name;
     }
 }

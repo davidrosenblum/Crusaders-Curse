@@ -11,7 +11,7 @@ export declare const enum Archetype {
 }
 export declare function getArchetypeName(id: number): string;
 export declare const enum MapType {
-    CITY_OF_KINGS = 1,
+    CENTRAL_CITY = 1,
     HINTERLANDS = 2,
     NORTHERN_RUINS = 3,
     DESERT_OASIS = 4,
@@ -85,13 +85,32 @@ export declare const enum NPCTier {
     ELITE = 2,
     BOSS = 3
 }
+export declare const enum NPCType {
+    GUARD = "guard",
+    VANGUARD = "vanguard",
+    ROYAL_GUARD = "royal-guard",
+    PARAGON = "paragon",
+    ENFORCER = "enforcer",
+    ARSONIST = "arstonist",
+    MARAUDER = "marauder",
+    RENEGADE_MAGE = "renegade-mage",
+    OVERSEER = "overseer",
+    WARRIOR = "warrior",
+    BRUTE = "brute",
+    CHIEFTAIN = "chieftain",
+    REANIMATED_CORPSE = "reanimated-corpse",
+    ANIMUS = "animus",
+    GRAVE_KNIGHT = "grave-knight",
+    LICH = "lich",
+    DEATH_KNIGHT = "death-knight"
+}
 export declare const enum Team {
-    KINGS_LEGION = "kings-legion",
-    RAIDERS = "raiders",
-    ORCS = "orcs",
-    UNDEAD = "undead",
-    DEMONS = "demons",
-    SEPARATISTS = "separatists",
-    CULTISTS = "cultists",
-    IMPERIALS = "imperials"
+    KINGS_LEGION = "King's Legion",
+    RAIDERS = "Raiders",
+    ORCS = "Orcs",
+    UNDEAD = "Undead",
+    DEMONS = "Demons",
+    SEPARATISTS = "Separatists",
+    CULTISTS = "Cultists",
+    IMPERIALS = "Imperials"
 }

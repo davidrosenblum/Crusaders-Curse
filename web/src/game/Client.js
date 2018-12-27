@@ -68,6 +68,8 @@ class Client extends EventEmitter{
                 return this.handleCharacterCreate(data, status);
             case OpCode.CHARACTER_SELECT:
                 return this.handleCharacterSelect(data, status);
+            case OpCode.ENTER_MAP:
+                return this.handleEnterMap(data, status);
         }
     }
 
@@ -101,6 +103,10 @@ class Client extends EventEmitter{
         if(status !== Status.GOOD){
             this.emit("character-select", {message: data.message, success: false});
         }
+    }
+
+    handleEnterMap(data, status){
+        
     }
 
     send(opCode, data){

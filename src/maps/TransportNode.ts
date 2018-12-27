@@ -8,8 +8,8 @@ export interface TransportNodeFullState{
     row:number;
     col:number;
     outMapID:number;
-    outX:number;
-    outY:number;
+    outRow:number;
+    outCol:number;
 }
 
 export const enum TransportNodeType{
@@ -26,18 +26,18 @@ export class TransportNode{
     private _row:number;
     private _col:number;
     private _outMapID:number;
-    private _outX:number;
-    private _outY:number;
+    private _outRow:number;
+    private _outCol:number;
 
-    constructor(type:TransportNodeType, text:string, row:number, col:number, outMapID:MapType, outX:number, outY:number){
+    constructor(type:TransportNodeType, text:string, row:number, col:number, outMapID:MapType, outRow:number, outCol:number){
         this._nodeID = TransportNode.tokenGen.nextToken();
         this._type = type;
         this._text = text;
         this._row = row;
         this._col = col;
         this._outMapID = outMapID;
-        this._outX = outX;
-        this._outY = outY;
+        this._outRow = outRow;
+        this._outCol = outCol;
     }
 
     public getState():TransportNodeFullState{
@@ -48,8 +48,8 @@ export class TransportNode{
             row:        this.row,
             col:        this.col,
             outMapID:   this.outMapID,
-            outX:       this.outX,
-            outY:       this.outY
+            outRow:     this.outRow,
+            outCol:     this.outCol
         };
     }
 
@@ -77,11 +77,11 @@ export class TransportNode{
         return this._outMapID;
     }
 
-    public get outX():number{
-        return this._outX;
+    public get outRow():number{
+        return this._outRow;
     }
 
-    public get outY():number{
-        return this._outY;
+    public get outCol():number{
+        return this._outCol;
     }
 }
