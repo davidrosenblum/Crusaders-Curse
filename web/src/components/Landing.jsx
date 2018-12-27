@@ -1,6 +1,7 @@
 import React from "react";
-import { Banner } from "./Banner";
 import { Container, Col, Row, Card, CardBody } from "reactstrap";
+import { Banner } from "./Banner";
+import { Footer } from "./Footer";
 
 export class Landing extends React.Component{
     render(){
@@ -11,6 +12,7 @@ export class Landing extends React.Component{
                     <Card>
                         <CardBody>
                             <Banner/>
+                            <br/>
                             <Row>
                                 <Col lg={4}>
                                     <div>
@@ -28,7 +30,9 @@ export class Landing extends React.Component{
                             </Row>
                         </CardBody>
                     </Card>
-                </Container>  
+                </Container>
+                <br/>
+                <Footer/>     
             </div>
         );
     }

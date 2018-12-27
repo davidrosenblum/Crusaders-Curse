@@ -4,11 +4,12 @@ import { Landing } from "./Landing";
 import { Register } from "./Register";
 import { Login } from "./Login";
 import { Navigation } from "./Navigation";
-import { Footer } from "./Footer";
 import { MenuModal } from "./MenuModal";
 import { CharacterSelect } from "./CharacterSelect";
 import { CharacterCreate } from "./CharacterCreate";
+import { GameView } from "./GameView";
 import NavDispatcher from "../dispatchers/NavDispatcher";
+import ModalDispatcher from "../dispatchers/ModalDispatcher";
 import Client from "../game/Client";
 
 export class App extends React.Component{
@@ -23,6 +24,17 @@ export class App extends React.Component{
     componentDidMount(){
         // menu change
         NavDispatcher.on("show-menu", evt => this.setState({menu: evt.menu}));
+
+        Client.on("close", this.onClientClose.bind(this));
+    }
+
+    onClientClose(){
+        this.setState({menu: "landing"});
+
+        ModalDispatcher.modal(
+            "Unable to connect to server. The server is probably offline.",
+            "Socket Error"
+        );
     }
 
     renderNav(){
@@ -47,6 +59,8 @@ export class App extends React.Component{
                 return <CharacterSelect characterList={this.state.characterList}/>;
             case "character-create":
                 return <CharacterCreate/>;
+            case "game":
+                return <GameView/>
             default:
                 return null;
         }
@@ -56,9 +70,7 @@ export class App extends React.Component{
         return (
             <div>
                 {this.renderNav()}
-                {this.renderCurrentMenu()}
-                <br/>
-                <Footer/>     
+                {this.renderCurrentMenu()}  
                 <MenuModal/>  
             </div>
         );

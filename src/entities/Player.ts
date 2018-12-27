@@ -1,6 +1,7 @@
 import { CasterObject, CasterObjectConfig } from "./CasterObject";
 import { CharacterDocument } from "../database/collections/CharactersCollection";
 import { Archetype, getArchetypeName } from "../data/Data";
+import { GameObjectState } from "./GameObject";
 
 export interface PlayerConfig extends CasterObjectConfig{
     archetype:string;
@@ -12,6 +13,12 @@ export interface Potions{
     rage:number;
     luck:number;
     protection:number;
+}
+
+// for UI! 
+export interface PlayerState extends GameObjectState{
+    potions:Potions;
+    abilities:{[name:string]: number};
 }
 
 export class Player extends CasterObject{
@@ -82,7 +89,7 @@ export class Player extends CasterObject{
         this.emit("gold", {gold});
     }
 
-    public getPotionsList():Potions{
+    public getPotions():Potions{
         return {
             health:     this._potions.health,
             mana:       this._potions.mana,
@@ -90,6 +97,16 @@ export class Player extends CasterObject{
             luck:       this._potions.luck,
             protection: this._potions.protection
         };
+    }
+
+    public getPlayerState():PlayerState{
+        let state:any = this.getState();
+        
+        state.level = this.level;
+        state.abilities = this.getAbilities();
+        state.potions = this.getPotions();
+
+        return state as PlayerState;
     }
 
     public get xpToGo():number{

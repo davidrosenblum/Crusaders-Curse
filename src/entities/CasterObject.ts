@@ -2,6 +2,12 @@ import { CombatObject, CombatObjectConfig } from "./CombatObject";
 import { GameMap } from "../maps/GameMap";
 import { Ability } from "../abilities/Ability";
 
+export interface AbilityItem{
+    name:string;
+    level:number;
+    recharge:number;
+}
+
 export interface CasterObjectConfig extends CombatObjectConfig{
     abilities:{[ability:string]: number};
 }
@@ -33,12 +39,12 @@ export abstract class CasterObject extends CombatObject{
     }
 
     public setMap(map:GameMap):void{
-        if(map.addUnit(this)){
+        if(map.addUnit(this) || map.hasUnit(this)){
             this._map = map;
         }
     }
 
-    public getAbilityList():{[ability:string]: {name:string, level:number, recharge:number}}{
+    public getAbilities():{[ability:string]: AbilityItem}{
         let abilityList = {};
 
         for(let abilityName in this._abilities){

@@ -27,11 +27,22 @@ export class CharacterSelect extends React.Component{
                 ModalDispatcher.modal(evt.message, "Character Error");
             }
         };
+
+        this.onEnterMap = evt => {
+            if(evt.success){
+                NavDispatcher.showGame();
+            }
+            else{
+                this.setState({inputsDisabled: false});
+                ModalDispatcher.modal(evt.message, "Map Error");
+            }
+        };
     }
 
     componentDidMount(){
         Client.on("character-list", this.onCharacterList);
         Client.on("character-select", this.onCharacterSelect);
+        Client.on("enter-map", this.onEnterMap);
 
         Client.getCharacterList();
     }
@@ -39,6 +50,7 @@ export class CharacterSelect extends React.Component{
     componentWillUnmount(){
         Client.removeListener("character-list", this.onCharacterList);
         Client.removeListener("character-select", this.onCharacterSelect);
+        Client.removeListener("enter-map", this.onEnterMap);
     }
 
     onCreate(){
@@ -64,8 +76,10 @@ export class CharacterSelect extends React.Component{
             if(row){
                 rows.push(
                     <tr key={i}>
-                        <td colSpan={3}>
-                            {row.name} - 
+                        <td>
+                            {row.name}
+                        </td>
+                        <td colSpan={2}>
                             Level {row.level} {row.archetype}
                         </td>
                         <td>

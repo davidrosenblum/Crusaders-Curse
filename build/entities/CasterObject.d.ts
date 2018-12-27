@@ -1,5 +1,10 @@
 import { CombatObject, CombatObjectConfig } from "./CombatObject";
 import { GameMap } from "../maps/GameMap";
+export interface AbilityItem {
+    name: string;
+    level: number;
+    recharge: number;
+}
 export interface CasterObjectConfig extends CombatObjectConfig {
     abilities: {
         [ability: string]: number;
@@ -12,12 +17,8 @@ export declare abstract class CasterObject extends CombatObject {
     learnAbility(abilityName: string, level?: number): void;
     hasAbility(abilityName: string): boolean;
     setMap(map: GameMap): void;
-    getAbilityList(): {
-        [ability: string]: {
-            name: string;
-            level: number;
-            recharge: number;
-        };
+    getAbilities(): {
+        [ability: string]: AbilityItem;
     };
     readonly map: GameMap;
 }

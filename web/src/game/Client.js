@@ -13,6 +13,10 @@ class Client extends EventEmitter{
     }
 
     connect(){
+        if(this.socket && !this.isConnected){
+            this.socket = null;
+        }
+
         if(!this.socket){
             this.socket = new WebSocket(`ws://${window.location.host.replace("3000", "8080")}`);
             
@@ -70,6 +74,8 @@ class Client extends EventEmitter{
                 return this.handleCharacterSelect(data, status);
             case OpCode.ENTER_MAP:
                 return this.handleEnterMap(data, status);
+            case OpCode.CHAT_MESSAGE:
+                return this.handleChat(data, status);
         }
     }
 
@@ -106,7 +112,18 @@ class Client extends EventEmitter{
     }
 
     handleEnterMap(data, status){
-        
+        if(status === Status.GOOD){
+            let {mapData, playerData} = data;
+            this.emit("enter-map", {playerData, mapData, success: true})
+        }
+        else this.emit("enter-map", {success: false});
+    }
+
+    handleChat(data, status){
+        if(status === Status.GOOD){
+            let {chat, from} = data;
+            this.emit("chat", {chat, from, success: true})
+        }
     }
 
     send(opCode, data){
@@ -143,6 +160,10 @@ class Client extends EventEmitter{
 
     selectCharacter(name){
         this.send(OpCode.CHARACTER_SELECT, {name});
+    }
+
+    chat(chat){
+        this.send(OpCode.CHAT_MESSAGE, {chat});
     }
 
     get isConnected(){
