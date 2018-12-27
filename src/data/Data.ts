@@ -38,7 +38,7 @@ export function getArchetypeName(id:number):string{
 }
 
 export const enum MapType{
-    CITY_OF_KINGS =       1,
+    CENTRAL_CITY =        1,
     HINTERLANDS =         2,
     NORTHERN_RUINS =      3,
     DESERT_OASIS =        4,
@@ -48,8 +48,8 @@ export const enum MapType{
 
 export const getMapName = function(id:number):string{
     switch(id){
-        case MapType.CITY_OF_KINGS:
-            return "City of Kings";
+        case MapType.CENTRAL_CITY:
+            return "Central City";
         case MapType.HINTERLANDS:
             return "Hinterlands";
         case MapType.NORTHERN_RUINS:

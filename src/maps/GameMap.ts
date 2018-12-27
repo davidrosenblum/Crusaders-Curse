@@ -76,7 +76,8 @@ export abstract class GameMap extends EventEmitter{
         if(!this.hasUnit(unit)){
             this._units[unit.objectID] = unit;
 
-            this.forEachClient(client => client.send(OpCode.OBJECT_CREATE, unit.getState(), Status.GOOD));
+            let object:GameObjectFullState = unit.getState();
+            this.forEachClient(client => client.send(OpCode.OBJECT_CREATE, {object}, Status.GOOD));
 
             return true;
         }

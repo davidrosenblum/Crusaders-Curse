@@ -11,7 +11,7 @@ export declare const enum Archetype {
 }
 export declare function getArchetypeName(id: number): string;
 export declare const enum MapType {
-    CITY_OF_KINGS = 1,
+    CENTRAL_CITY = 1,
     HINTERLANDS = 2,
     NORTHERN_RUINS = 3,
     DESERT_OASIS = 4,

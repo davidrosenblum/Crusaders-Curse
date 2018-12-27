@@ -21,6 +21,7 @@ export class CharacterSelect extends React.Component{
         };
 
         this.onCharacterSelect = evt => {
+            // only will be an error (map-enter is considered the success)
             if(!evt.success){
                 this.setState({inputsDisabled: false});
                 ModalDispatcher.modal(evt.message, "Character Error");
