@@ -13,14 +13,14 @@ export class Login extends React.Component{
         this.passwordInput = null;
         this.submitBtn = null;
 
+        this.lastUsername = null;
+
         this.state = {
-            message: null
+            message:        null,
+            inputsDisabled: false
         };
 
-        this.onClientConnected = () => {
-            this.setState({message: null});
-            this.setInputsDisabled(false);
-        };
+        this.onClientConnected = () => this.setState({message: null, inputsDisabled: false});
 
         this.onClientClosed = () => {
             this.setState({message: "Socket connection error."});
@@ -43,6 +43,7 @@ export class Login extends React.Component{
                 )
             }
             else{
+                this.saveUsername();
                 NavDispatcher.showCharacterSelect();
             }
         };
@@ -53,9 +54,13 @@ export class Login extends React.Component{
         Client.on("close", this.onClientClosed);
         Client.on("login", this.onClientLogin);
 
+        let lastUsername = this.getLastUsername();
+        if(lastUsername){
+            this.usernameInput.value = lastUsername;
+        }
+
         if(!Client.isConnected){
-            this.setInputsDisabled(true);
-            this.setState({message: "Connecting to server..."});
+            this.setState({message: "Connecting to server...", inputsDisabled: true});
             Client.connect();
         }
     }
@@ -76,16 +81,23 @@ export class Login extends React.Component{
         this.submitBtn.disabled = true;
         
         let username = this.usernameInput.value,
-
             password = this.passwordInput.value;
+
+        this.lastUsername = username;
 
         Client.login(username, password);
     }
 
-    setInputsDisabled(disabled){
-        this.usernameInput.disabled = disabled;
-        this.passwordInput.disabled = disabled;
-        this.submitBtn.disabled = disabled;
+    saveUsername(username){
+        username = username || this.lastUsername;
+        if(username){
+            window.localStorage.setItem("username", username);
+            console.log("save", username);
+        }
+    }
+
+    getLastUsername(){
+        return window.localStorage.getItem("username") || null;
     }
 
     render(){
@@ -105,6 +117,7 @@ export class Login extends React.Component{
                                         type="text"
                                         maxLength="25"
                                         required
+                                        disabled={this.state.inputsDisabled}
                                     />
                                 </FormGroup>
                                 <FormGroup>
@@ -114,10 +127,11 @@ export class Login extends React.Component{
                                         type="password"
                                         maxLength="25"
                                         required
+                                        disabled={this.state.inputsDisabled}
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Button color="dark" innerRef={btn => this.submitBtn = btn}>
+                                    <Button color="dark" innerRef={btn => this.submitBtn = btn} disabled={this.state.inputsDisabled}>
                                         Submit
                                     </Button>
                                     {this.state.message}
