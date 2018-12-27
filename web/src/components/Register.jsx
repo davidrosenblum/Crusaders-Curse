@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Card, CardBody, Form, FormGroup, Label, Button, Input } from "reactstrap";
 import { Ajax } from "../utils/Ajax";
 import { Banner } from "./Banner";
+import { Footer } from "./Footer";
 import ModalDispatcher from "../dispatchers/ModalDispatcher";
 
 export class Register extends React.Component{
@@ -57,45 +58,48 @@ export class Register extends React.Component{
                     <br/>
                     <Card>
                         <CardBody>
-                        <Banner/>
-                        <h3 className="text-center">Account Registration</h3>
-                        <Form onSubmit={this.onSubmit.bind(this)}>
-                            <FormGroup>
-                                <Label>Username</Label>
-                                <Input
-                                    innerRef={input => this.usernameInput = input}
-                                    type="text"
-                                    maxLength="25"
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Password</Label>
-                                <Input
-                                    innerRef={input => this.passwordInput = input}
-                                    type="password"
-                                    maxLength="25"
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Confirm Password</Label>
-                                <Input
-                                    innerRef={input => this.confirmInput = input}
-                                    type="password"
-                                    maxLength="25"
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Button innerRef={input => this.submitBtn = input} color="dark">
-                                    Submit
-                                </Button>
-                            </FormGroup>
-                        </Form>
+                            <Banner/>
+                            <br/>
+                            <h3 className="text-center">Account Registration</h3>
+                            <Form onSubmit={this.onSubmit.bind(this)}>
+                                <FormGroup>
+                                    <Label>Username</Label>
+                                    <Input
+                                        innerRef={input => this.usernameInput = input}
+                                        type="text"
+                                        maxLength="25"
+                                        required
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label>Password</Label>
+                                    <Input
+                                        innerRef={input => this.passwordInput = input}
+                                        type="password"
+                                        maxLength="25"
+                                        required
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label>Confirm Password</Label>
+                                    <Input
+                                        innerRef={input => this.confirmInput = input}
+                                        type="password"
+                                        maxLength="25"
+                                        required
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Button innerRef={input => this.submitBtn = input} color="dark">
+                                        Submit
+                                    </Button>
+                                </FormGroup>
+                            </Form>
                         </CardBody>
                     </Card>
                 </Container>
+                <br/>
+                <Footer/>  
             </div>
         );
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Card, CardBody, Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Banner } from "./Banner";
+import { Footer} from "./Footer";
 import Client from "../game/Client";
 import NavDispatcher from "../dispatchers/NavDispatcher";
 import ModalDispatcher from "../dispatchers/ModalDispatcher";
@@ -13,23 +14,14 @@ export class Login extends React.Component{
         this.passwordInput = null;
         this.submitBtn = null;
 
+        this.lastUsername = null;
+
         this.state = {
-            message: null
+            message:        null,
+            inputsDisabled: false
         };
 
-        this.onClientConnected = () => {
-            this.setState({message: null});
-            this.setInputsDisabled(false);
-        };
-
-        this.onClientClosed = () => {
-            this.setState({message: "Socket connection error."});
-
-            ModalDispatcher.modal(
-                "Unable to connect to server. The server is probably offline.",
-                "Socket Error"
-            );
-        };
+        this.onClientConnected = () => this.setState({message: null, inputsDisabled: false});
 
         this.onClientLogin = evt => {
             let {success, message} = evt;
@@ -43,6 +35,7 @@ export class Login extends React.Component{
                 )
             }
             else{
+                this.saveUsername();
                 NavDispatcher.showCharacterSelect();
             }
         };
@@ -50,19 +43,21 @@ export class Login extends React.Component{
 
     componentDidMount(){
         Client.on("connect", this.onClientConnected);
-        Client.on("close", this.onClientClosed);
         Client.on("login", this.onClientLogin);
 
+        let lastUsername = this.getLastUsername();
+        if(lastUsername){
+            this.usernameInput.value = lastUsername;
+        }
+
         if(!Client.isConnected){
-            this.setInputsDisabled(true);
-            this.setState({message: "Connecting to server..."});
+            this.setState({message: "Connecting to server...", inputsDisabled: true});
             Client.connect();
         }
     }
 
     componentWillUnmount(){
         Client.removeListener("connect", this.onClientConnected);
-        Client.removeListener("close", this.onClientClosed);
         Client.removeListener("login", this.onClientLogin);
     }
 
@@ -76,16 +71,22 @@ export class Login extends React.Component{
         this.submitBtn.disabled = true;
         
         let username = this.usernameInput.value,
-
             password = this.passwordInput.value;
+
+        this.lastUsername = username;
 
         Client.login(username, password);
     }
 
-    setInputsDisabled(disabled){
-        this.usernameInput.disabled = disabled;
-        this.passwordInput.disabled = disabled;
-        this.submitBtn.disabled = disabled;
+    saveUsername(username){
+        username = username || this.lastUsername;
+        if(username){
+            window.localStorage.setItem("username", username);
+        }
+    }
+
+    getLastUsername(){
+        return window.localStorage.getItem("username") || null;
     }
 
     render(){
@@ -96,6 +97,7 @@ export class Login extends React.Component{
                     <Card>
                         <CardBody>
                             <Banner/>
+                            <br/>
                             <h3 className="text-center">Account Login</h3>
                             <Form onSubmit={this.onSubmit.bind(this)}>
                                 <FormGroup>
@@ -105,6 +107,7 @@ export class Login extends React.Component{
                                         type="text"
                                         maxLength="25"
                                         required
+                                        disabled={this.state.inputsDisabled}
                                     />
                                 </FormGroup>
                                 <FormGroup>
@@ -114,10 +117,11 @@ export class Login extends React.Component{
                                         type="password"
                                         maxLength="25"
                                         required
+                                        disabled={this.state.inputsDisabled}
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Button color="dark" innerRef={btn => this.submitBtn = btn}>
+                                    <Button color="dark" innerRef={btn => this.submitBtn = btn} disabled={this.state.inputsDisabled}>
                                         Submit
                                     </Button>
                                     {this.state.message}
@@ -126,6 +130,8 @@ export class Login extends React.Component{
                         </CardBody>
                     </Card>
                 </Container>
+                <br/>
+                <Footer/>  
             </div>
         );
     }

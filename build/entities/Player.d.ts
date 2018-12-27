@@ -1,5 +1,6 @@
 import { CasterObject, CasterObjectConfig } from "./CasterObject";
 import { CharacterDocument } from "../database/collections/CharactersCollection";
+import { GameObjectState } from "./GameObject";
 export interface PlayerConfig extends CasterObjectConfig {
     archetype: string;
 }
@@ -9,6 +10,12 @@ export interface Potions {
     rage: number;
     luck: number;
     protection: number;
+}
+export interface PlayerState extends GameObjectState {
+    potions: Potions;
+    abilities: {
+        [name: string]: number;
+    };
 }
 export declare class Player extends CasterObject {
     static readonly LEVEL_CAP: number;
@@ -27,7 +34,8 @@ export declare class Player extends CasterObject {
     addAbilityPoints(points: number): void;
     addXP(xp: number): void;
     addGold(gold: number): void;
-    getPotionsList(): Potions;
+    getPotions(): Potions;
+    getPlayerState(): PlayerState;
     readonly xpToGo: number;
     readonly level: number;
     readonly xp: number;

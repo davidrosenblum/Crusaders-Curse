@@ -21,7 +21,7 @@ export declare abstract class GameMap extends EventEmitter {
     private _numClients;
     constructor(name: string, mapData: MapData);
     private bulkUpdate;
-    submitChat(chat: string, from: string): void;
+    submitChat(chat: string, from?: string): void;
     addClient(client: GameClient, successBeforePlayerAdd?: (done: Function) => any): void;
     removeClient(client: GameClient): void;
     addUnit(unit: CasterObject): boolean;

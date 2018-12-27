@@ -6,7 +6,8 @@ import { OpCode, Status, MapData, NPCType } from "../data/Data";
 import { GameObjectFullState } from "../entities/GameObject";
 import { CombatStats } from "../entities/CombatObject";
 import { NPC } from "../entities/NPC";
-import { NPCFactory, NPCOptions } from "../entities/NPCFactory";
+import { NPCFactory } from "../entities/NPCFactory";
+import { PlayerState, Player } from "../entities/Player";
 
 export interface GameMapFullState{
     name:string;
@@ -34,13 +35,17 @@ export abstract class GameMap extends EventEmitter{
         this._numClients = 0;
     }
 
-    private bulkUpdate(opCode:OpCode, data?:any, status?:Status):void{
+    private bulkUpdate(opCode:OpCode, data?:any, status?:Status, ignoreClient:GameClient=null):void{
         let json:string = JSON.stringify({opCode, data, status});
 
-        this.forEachClient(client => client.sendString(json));
+        this.forEachClient(client => {
+            if(client !== ignoreClient){
+                client.sendString(json);
+            }
+        });
     }
 
-    public submitChat(chat:string, from:string):void{
+    public submitChat(chat:string, from:string=null):void{
         this.bulkUpdate(OpCode.CHAT_MESSAGE, {chat, from}, Status.GOOD);
     }
 
@@ -50,13 +55,20 @@ export abstract class GameMap extends EventEmitter{
             this._numClients++;
 
             let mapState:GameMapFullState = this.getState();
-            client.send(OpCode.ENTER_MAP, {mapState}, Status.GOOD);
+            let playerState:PlayerState = client.player.getPlayerState();
+
+            client.send(OpCode.ENTER_MAP, {mapState, playerState}, Status.GOOD);
+
+            let nextStep:Function = () => {
+                this.addUnit(client.player);
+                this.submitChat(`${client.player.name} connected.`);
+            };
 
             if(successBeforePlayerAdd){
-                successBeforePlayerAdd(() => this.addUnit(client.player));
+                successBeforePlayerAdd(() => nextStep());
             }
             else{
-                this.addUnit(client.player);
+                nextStep();
             }
         }
         else throw new Error("Already in map.")
@@ -70,6 +82,8 @@ export abstract class GameMap extends EventEmitter{
             if(client.player){
                 this.removeUnit(client.player);
             }
+
+            this.submitChat(`${client.player.name} disconnected.`);
 
             if(this.isEmpty){
                 this.emit("empty");
@@ -109,7 +123,7 @@ export abstract class GameMap extends EventEmitter{
     public createNPC(type:NPCType, row:number=0, col:number=0, anim?:string, name?:string):void{
         let x:number = this._mapData.tileSize * col;
         let y:number = this._mapData.tileSize * row;
-        
+
         let npc:NPC = NPCFactory.createNPC(type, {x, y, name, anim});
         this.addUnit(npc);
     }
