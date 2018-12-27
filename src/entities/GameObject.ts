@@ -11,9 +11,10 @@ export interface GameObjectConfig{
     anim?:string;
     facing?:Facing;
     moveSpeed?:number;
+    spawnCoords?:SpawnCoordinates;
 }
 
-export interface GameObjectState{
+export interface GameObjectState{ // update data
     x?:number;
     y?:number;
     anim?:string;
@@ -22,7 +23,7 @@ export interface GameObjectState{
     stunned?:boolean;
 }
 
-export interface GameObjectFullState{
+export interface GameObjectFullState{ // spawn data
     objectID:string;
     team:Team;
     name:string;
@@ -33,6 +34,12 @@ export interface GameObjectFullState{
     facing:Facing;
     moveSpeed:number;
     stunned:boolean;
+    spawnCoords:SpawnCoordinates;
+}
+
+export interface SpawnCoordinates{
+    row:number;
+    col:number;
 }
 
 export const enum Facing{
@@ -55,6 +62,7 @@ export abstract class GameObject extends EventEmitter{
     private _facing:Facing;
     private _moveSpeed:number;
     private _stunned:boolean;
+    private _spawnCoords:SpawnCoordinates;
 
     constructor(config:GameObjectConfig){
         super();
@@ -62,13 +70,14 @@ export abstract class GameObject extends EventEmitter{
         this._objectID = GameObject.tokenGen.nextToken();
         this._name = config.name;
         this._type = config.type;
+        this.x = config.x;
+        this.y = config.y;
         this.team = config.team || null;
-        this.x = config.x || 0;
-        this.y = config.y || 0;
         this.anim = config.anim || null;
         this.facing = config.facing || Facing.DOWN;
         this.moveSpeed = 1;
         this.isStunned = false;
+        this._spawnCoords = config.spawnCoords ? {row: config.spawnCoords.row || 0, col: config.spawnCoords.col || 0} : null;
     }
 
     public inRange(target:GameObject, range:number):boolean{
@@ -102,16 +111,17 @@ export abstract class GameObject extends EventEmitter{
 
     public getState():GameObjectFullState{
         return {
-            objectID:   this.objectID,
-            team:       this.team,
-            name:       this.name,
-            type:       this.type,
-            x:          this.x,
-            y:          this.y,
-            anim:       this.anim,
-            facing:     this.facing,
-            moveSpeed:  this.moveSpeed,
-            stunned:    this.isStunned
+            objectID:       this.objectID,
+            team:           this.team,
+            name:           this.name,
+            type:           this.type,
+            x:              this.x,
+            y:              this.y,
+            anim:           this.anim,
+            facing:         this.facing,
+            moveSpeed:      this.moveSpeed,
+            stunned:        this.isStunned,
+            spawnCoords:    this._spawnCoords
         };
     }
 

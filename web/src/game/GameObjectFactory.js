@@ -10,7 +10,7 @@ export class GameObjectFactory{
             let object = new Type(x, y, name);
 
             if(anim) object.playAnimation(anim);
-            
+
             if(name) object.setNametag(name);
 
             return object;

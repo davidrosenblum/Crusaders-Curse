@@ -10,6 +10,7 @@ export interface GameObjectConfig {
     anim?: string;
     facing?: Facing;
     moveSpeed?: number;
+    spawnCoords?: SpawnCoordinates;
 }
 export interface GameObjectState {
     x?: number;
@@ -30,6 +31,11 @@ export interface GameObjectFullState {
     facing: Facing;
     moveSpeed: number;
     stunned: boolean;
+    spawnCoords: SpawnCoordinates;
+}
+export interface SpawnCoordinates {
+    row: number;
+    col: number;
 }
 export declare const enum Facing {
     UP = "up",
@@ -49,6 +55,7 @@ export declare abstract class GameObject extends EventEmitter {
     private _facing;
     private _moveSpeed;
     private _stunned;
+    private _spawnCoords;
     constructor(config: GameObjectConfig);
     inRange(target: GameObject, range: number): boolean;
     setState(state: GameObjectState): void;

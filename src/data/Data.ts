@@ -66,7 +66,6 @@ export const getMapName = function(id:number):string{
 }
 
 export interface MapData{
-    tileSize:number,
     background:number[][],
     midground:number[][],
     foreground?:number[][]

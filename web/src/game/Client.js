@@ -113,8 +113,8 @@ class Client extends EventEmitter{
 
     handleEnterMap(data, status){
         if(status === Status.GOOD){
-            let {mapData, playerData} = data;
-            this.emit("enter-map", {playerData, mapData, success: true})
+            let {mapState, playerState} = data;
+            this.emit("enter-map", {playerState, mapState, success: true})
         }
         else this.emit("enter-map", {success: false});
     }

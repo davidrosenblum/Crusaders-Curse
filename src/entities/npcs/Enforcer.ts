@@ -2,7 +2,7 @@ import { NPCType, Team } from "../../data/Data";
 import { NPC } from "../NPC";
 
 export class Enforcer extends NPC{
-    constructor(x?:number, y?:number, anim?:string, name?:string){
+    constructor(col:number=0, row:number=0, anim?:string, name?:string){
         super({
             type:           NPCType.ENFORCER,
             name:           name || "Enforcer",
@@ -25,8 +25,7 @@ export class Enforcer extends NPC{
             abilities: {
 
             },
-            x,
-            y,
+            spawnCoords: {row, col},
             anim
         });
     }
