@@ -92,7 +92,6 @@ export class Login extends React.Component{
         username = username || this.lastUsername;
         if(username){
             window.localStorage.setItem("username", username);
-            console.log("save", username);
         }
     }
 
