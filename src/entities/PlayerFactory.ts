@@ -1,4 +1,4 @@
-import { Archetype, getArchetypeName } from "../data/Data";
+import { Archetype, getArchetypeName, Team } from "../data/Data";
 import { CharacterDocument } from "../database/collections/CharactersCollection";
 import { Player } from "./Player";
 
@@ -37,7 +37,8 @@ export class PlayerFactory{
             abilities:          {},
             damageMultiplier:   1,
             x:                  saveData.last_map.x,
-            y:                  saveData.last_map.y
+            y:                  saveData.last_map.y,
+            teamID:             Team.KINGS_LEGION
         });
     }
 
@@ -62,7 +63,8 @@ export class PlayerFactory{
             abilities:          {},
             damageMultiplier:   1,
             x:                  saveData.last_map.x,
-            y:                  saveData.last_map.y
+            y:                  saveData.last_map.y,
+            teamID:             Team.KINGS_LEGION
         });
     }
 
@@ -87,7 +89,8 @@ export class PlayerFactory{
             abilities:          {},
             damageMultiplier:   1,
             x:                  saveData.last_map.x,
-            y:                  saveData.last_map.y
+            y:                  saveData.last_map.y,
+            teamID:             Team.KINGS_LEGION
         });
     }
 }

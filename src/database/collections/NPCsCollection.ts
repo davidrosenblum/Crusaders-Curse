@@ -1,5 +1,5 @@
 import { Db, InsertWriteOpResult } from "mongodb";
-import { Team, NPCTier } from "../../data/Data";
+import { Team, NPCTier, NPCType } from "../../data/Data";
 
 export interface NPCDocument{
     type:string;
@@ -30,7 +30,7 @@ export class NPCsCollection{
 
     private static defaultNPCs:NPCDocument[] = [
         {
-            type:           "enforcer",
+            type:           NPCType.ENFORCER,
             name:           "Enforcer",
             move_speed:     2,
             team:           Team.RAIDERS,
@@ -43,7 +43,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "arsonist",
+            type:           NPCType.ARSONIST,
             name:           "Arsonist",
             move_speed:     2,
             team:           Team.RAIDERS,
@@ -56,7 +56,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "marauder",
+            type:           NPCType.MARAUDER,
             name:           "Marauder",
             move_speed:     2,
             team:           Team.RAIDERS,
@@ -69,7 +69,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "renegade-mage",
+            type:           NPCType.RENEGADE_MAGE,
             name:           "Renegade Mage",
             move_speed:     2,
             team:           Team.RAIDERS,
@@ -82,7 +82,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "overseer",
+            type:           NPCType.OVERSEER,
             name:           "Overseer",
             move_speed:     1,
             team:           Team.RAIDERS,
@@ -95,7 +95,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "warrior",
+            type:           NPCType.WARRIOR,
             name:           "Warrior",
             move_speed:     2,
             team:           Team.ORCS,
@@ -108,7 +108,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "brute",
+            type:           NPCType.BRUTE,
             name:           "Brute",
             move_speed:     2,
             team:           Team.ORCS,
@@ -121,7 +121,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "chieftain",
+            type:           NPCType.CHIEFTAIN,
             name:           "Chieftain",
             move_speed:     1,
             team:           Team.ORCS,
@@ -134,7 +134,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "reanimated-corpse",
+            type:           NPCType.REANIMATED_CORPSE,
             name:           "Reanimated Corpse",
             move_speed:     2,
             team:           Team.UNDEAD,
@@ -147,7 +147,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "animus",
+            type:           NPCType.ANIMUS,
             name:           "Animus",
             move_speed:     2,
             team:           Team.UNDEAD,
@@ -160,7 +160,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "grave-knight",
+            type:           NPCType.GRAVE_KNIGHT,
             name:           "Grave Knight",
             move_speed:     2,
             team:           Team.UNDEAD,
@@ -173,7 +173,7 @@ export class NPCsCollection{
             abilities:      {}
         },
         {
-            type:           "lich",
+            type:           NPCType.LICH,
             name:           "Lich",
             move_speed:     2,
             team:           Team.UNDEAD,
@@ -187,7 +187,7 @@ export class NPCsCollection{
         },
         ,
         {
-            type:           "death-knight",
+            type:           NPCType.DEATH_KNIGHT,
             name:           "Death Knight",
             move_speed:     1,
             team:           Team.UNDEAD,

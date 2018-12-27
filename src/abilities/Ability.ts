@@ -77,15 +77,15 @@ export abstract class Ability extends EventEmitter{
     }
 
     public validateAlliesOnly(caster:CasterObject, target:CasterObject):boolean{
-        return (caster.teamID === target.teamID) && (caster !== target);
+        return (caster.team === target.team) && (caster !== target);
     }
 
     public validateAlliesAndSelf(caster:CasterObject, target:CasterObject):boolean{
-        return (caster.teamID === target.teamID);
+        return (caster.team === target.team);
     }
 
     public validateEnemiesOnly(caster:CasterObject, target:CasterObject):boolean{
-        return (caster.teamID !== target.teamID);
+        return (caster.team !== target.team);
     }
 
     public abstract validateTarget(caster:CasterObject, target:CasterObject):boolean;

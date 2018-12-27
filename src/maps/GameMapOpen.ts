@@ -5,15 +5,10 @@ export class GameMapOpen extends GameMap{
     private _mapName:string;
     private _mapType:MapType;
 
-    constructor(mapName:string, mapType:MapType, mapData:MapData){
-        super(mapData);
-
-        this._mapName = mapName;
+    constructor(name:string, mapType:MapType, mapData:MapData){
+        super(name, mapData);
+        
         this._mapType = mapType;
-    }
-
-    public get mapName():string{
-        return this._mapName;
     }
 
     public get mapType():MapType{

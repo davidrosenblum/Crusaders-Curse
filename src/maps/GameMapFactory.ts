@@ -1,4 +1,4 @@
-import { getMapData, getInstanceName, MapType, MapInstanceType, getMapName } from "../data/Data";
+import { getMapData, getInstanceName, MapType, MapInstanceType, getMapName, NPCType } from "../data/Data";
 import { TransportNodeType } from "./TransportNode";
 import { GameMapInstance } from "./GameMapInstance";
 import { GameMapOpen } from "./GameMapOpen";
@@ -55,6 +55,8 @@ class CentralCity extends GameMapOpen{
         this.createTransportNode(TransportNodeType.AIRSHIP, NorthernRuins.NAME, 2, 4, NorthernRuins.MAP_ID, 1, 5);
         this.createTransportNode(TransportNodeType.AIRSHIP, DesertOasis.NAME, 2, 6, DesertOasis.MAP_ID, 1, 5);
         this.createTransportNode(TransportNodeType.AIRSHIP, VolcanicWastelands.NAME, 2, 8, VolcanicWastelands.MAP_ID, 1, 5);
+
+        this.createNPC(NPCType.PARAGON, 5, 3);
     }
 }
 

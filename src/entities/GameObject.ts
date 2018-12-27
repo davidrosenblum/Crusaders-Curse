@@ -1,8 +1,9 @@
 import { EventEmitter } from "events";
 import { TokenGenerator } from "../utils/TokenGenerator";
+import { Team } from "../data/Data";
 
 export interface GameObjectConfig{
-    teamID?:string;
+    team?:Team;
     name:string;
     type:string;
     x?:number;
@@ -23,7 +24,7 @@ export interface GameObjectState{
 
 export interface GameObjectFullState{
     objectID:string;
-    teamID:string;
+    team:Team;
     name:string;
     type:string;
     x:number;
@@ -45,7 +46,7 @@ export abstract class GameObject extends EventEmitter{
     private static tokenGen:TokenGenerator = new TokenGenerator(16);
 
     private _objectID:string;
-    private _teamID:string;
+    private _team:Team;
     private _type:string;
     private _name:string;
     private _x:number;
@@ -61,7 +62,7 @@ export abstract class GameObject extends EventEmitter{
         this._objectID = GameObject.tokenGen.nextToken();
         this._name = config.name;
         this._type = config.type;
-        this.teamID = config.teamID || null;
+        this.team = config.team || null;
         this.x = config.x || 0;
         this.y = config.y || 0;
         this.anim = config.anim || null;
@@ -102,20 +103,20 @@ export abstract class GameObject extends EventEmitter{
     public getState():GameObjectFullState{
         return {
             objectID:   this.objectID,
-            teamID:     this.teamID,
+            team:       this.team,
             name:       this.name,
             type:       this.type,
             x:          this.x,
             y:          this.y,
             anim:       this.anim,
             facing:     this.facing,
-            moveSpeed:   this.moveSpeed,
+            moveSpeed:  this.moveSpeed,
             stunned:    this.isStunned
         };
     }
 
-    public set teamID(value:string){
-        this._teamID = value;
+    public set team(value:Team){
+        this._team = value;
     }
 
     public set x(x:number){
@@ -152,8 +153,8 @@ export abstract class GameObject extends EventEmitter{
         return this._objectID;
     }
 
-    public get teamID():string{
-        return this._teamID;
+    public get team():Team{
+        return this._team;
     }
 
     public get name():string{
