@@ -1,4 +1,4 @@
 import { NPC } from "../NPC";
 export declare class Paragon extends NPC {
-    constructor(x?: number, y?: number, anim?: string, name?: string);
+    constructor(col?: number, row?: number, anim?: string, name?: string);
 }

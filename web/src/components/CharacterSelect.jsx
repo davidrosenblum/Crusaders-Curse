@@ -4,6 +4,7 @@ import { Banner } from "./Banner";
 import Client from "../game/Client";
 import NavDispatcher from "../dispatchers/NavDispatcher";
 import ModalDispatcher from "../dispatchers/ModalDispatcher";
+import Game from "../game/Game";
 
 export class CharacterSelect extends React.Component{
     constructor(props){
@@ -30,6 +31,7 @@ export class CharacterSelect extends React.Component{
 
         this.onEnterMap = evt => {
             if(evt.success){
+                Game.loadMap(evt.mapState);
                 NavDispatcher.showGame();
             }
             else{

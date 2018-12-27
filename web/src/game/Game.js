@@ -2,6 +2,10 @@ import { EventEmitter } from "events";
 import * as fw from "@davidrosenblum/frostwork";
 import { getGameObjectType } from "./GameObjects";
 import { GameObjectFactory } from "./GameObjectFactory";
+import { TransportNodeFactory } from "./TransportNodeFactory";
+import { MapTileTypes } from "./MapTileTypes";
+
+export const TILE_SIZE = 64;
 
 class Game extends EventEmitter{
     constructor(){
@@ -22,16 +26,31 @@ class Game extends EventEmitter{
     loadMap(mapState){
         this.todo = [];
 
-        let {transportNodes, units, mapData} = mapState;
-        let {tileSize, background, midground, foreground} = mapData;
+        let {transportNodes, units, mapData, name} = mapState;
+        let {background, midground, foreground} = mapData;
 
-        let gmd = this.layers.buildMap({background, midground, foreground, tileSize});
+        let layer1 = {
+            tileLayout: background,
+            tileTypes:  MapTileTypes
+        };
+
+        let layer2 = {
+            tileLayout: midground,
+            tileTypes:  MapTileTypes
+        };
+
+        let layer3 = {
+            tileLayout: foreground,
+            tileTypes:  MapTileTypes
+        };
+
+        let gmd = this.layers.buildMap({background: layer1, midground: layer2, foreground: layer3, tileSize: TILE_SIZE});
 
         this.mapBounds = gmd.mapBounds;
         this.collisionGrid = gmd.collisionGrid;
         this.scroller = new fw.Scroller(this.renderer, this.mapBounds);
 
-        transportNodes.forEach(tnode => null);
+        transportNodes.forEach(tnode => this.createTransportNode(tnode));
         units.forEach(unit => this.createUnit(unit));
 
         this.todo.forEach(task => task());
@@ -51,7 +70,10 @@ class Game extends EventEmitter{
     }
 
     createTransportNode(data){
-        let Type = getGameObjectType()
+        let tnode = TransportNodeFactory.create(data.type, data.text, data.outMapID, data.outRow, data.outCol);
+        if(tnode){
+            this.layers.add(tnode);
+        }
     }
 
     createUnit(data){
@@ -63,7 +85,12 @@ class Game extends EventEmitter{
     
             let task = () => {
                 if(this.units.addObject(object)){
-                    this.layers.add(object);
+                    if(data.spawnCoords){
+                        this.layers.addAt(object, data.spawnCoords.col, data.spawnCoords.row);
+                    }
+                    else{
+                        this.layers.add(object);
+                    }
                 }
             };
     

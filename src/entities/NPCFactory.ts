@@ -5,20 +5,20 @@ import { Paragon } from "./npcs/Paragon";
 
 export interface NPCOptions{
     name?:string;
-    x?:number;
-    y?:number;
     anim?:string;
+    row?:number;
+    col?:number;
 }
 
 export class NPCFactory{
     public static createNPC(npcType:NPCType, options:NPCOptions={}):NPC{
-        let {x, y, anim, name} = options;
+        let {row, col, anim, name} = options;
 
         switch(npcType){
             case NPCType.PARAGON:
-                return new Paragon(x, y, anim, name);
+                return new Paragon(col, row, anim, name);
             case NPCType.ENFORCER:
-                return new Enforcer(x, y, anim, name);
+                return new Enforcer(col, row, anim, name);
             default:
                 return null;
         }

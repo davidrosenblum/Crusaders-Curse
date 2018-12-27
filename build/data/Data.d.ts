@@ -20,7 +20,6 @@ export declare const enum MapType {
 }
 export declare const getMapName: (id: number) => string;
 export interface MapData {
-    tileSize: number;
     background: number[][];
     midground: number[][];
     foreground?: number[][];
