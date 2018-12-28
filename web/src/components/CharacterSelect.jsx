@@ -31,8 +31,7 @@ export class CharacterSelect extends React.Component{
 
         this.onEnterMap = evt => {
             if(evt.success){
-                Game.loadMap(evt.mapState);
-                NavDispatcher.showGame();
+                Game.loadMap(evt.mapState).then(() => NavDispatcher.showGame());
             }
             else{
                 this.setState({inputsDisabled: false});

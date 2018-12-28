@@ -22,6 +22,8 @@ export class GameView extends React.Component{
 
     componentDidMount(){
         Client.on("chat", this.onUpdateChat);
+
+        Game.renderer.injectInto(`#game-canvas-container`);
     }
 
     componentWillUnmount(){

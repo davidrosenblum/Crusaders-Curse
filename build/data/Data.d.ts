@@ -24,7 +24,7 @@ export interface MapData {
     midground: number[][];
     foreground?: number[][];
 }
-export declare const getMapData: (id: number) => MapData;
+export declare const getMapData: (name: string) => MapData;
 export declare const enum MapInstanceType {
     RAIDER_ENCAMPMENT = 1,
     ORC_STRONGHOLD = 2,

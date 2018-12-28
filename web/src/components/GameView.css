@@ -20,3 +20,11 @@
 #hud-chat textarea{
     height: 300px;
 }
+
+#game-canvas-container{
+    text-align: center;
+}
+
+#game-canvas-container canvas{
+    background-color: black;
+}

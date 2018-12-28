@@ -49,7 +49,7 @@ class CentralCity extends GameMapOpen{
     public static readonly MAP_ID:number =  MapType.CENTRAL_CITY;
     
     constructor(){
-        super("Central City", MapType.CENTRAL_CITY, getMapData(MapType.CENTRAL_CITY));
+        super("Central City", MapType.CENTRAL_CITY, getMapData(CentralCity.NAME));
 
         this.createTransportNode(TransportNodeType.AIRSHIP, Hinterlands.NAME, 2, 2, Hinterlands.MAP_ID, 1, 5);
         this.createTransportNode(TransportNodeType.AIRSHIP, NorthernRuins.NAME, 2, 4, NorthernRuins.MAP_ID, 1, 5);
@@ -65,7 +65,7 @@ class Hinterlands extends GameMapOpen{
     public static readonly MAP_ID:MapType =  MapType.HINTERLANDS;
 
     constructor(){
-        super(Hinterlands.NAME, Hinterlands.MAP_ID, getMapData(Hinterlands.MAP_ID));
+        super(Hinterlands.NAME, Hinterlands.MAP_ID, getMapData(Hinterlands.NAME));
 
         this.createTransportNode(TransportNodeType.AIRSHIP, CentralCity.NAME, 1, 5, CentralCity.MAP_ID, 2, 2);
     }
@@ -76,7 +76,7 @@ class NorthernRuins extends GameMapOpen{
     public static readonly MAP_ID:MapType = MapType.NORTHERN_RUINS;
 
     constructor(){
-        super(NorthernRuins.NAME, NorthernRuins.MAP_ID, getMapData(NorthernRuins.MAP_ID));
+        super(NorthernRuins.NAME, NorthernRuins.MAP_ID, getMapData(NorthernRuins.NAME));
 
         this.createTransportNode(TransportNodeType.AIRSHIP, CentralCity.NAME, 1, 5, CentralCity.MAP_ID, 2, 4);
     }
@@ -87,7 +87,7 @@ class DesertOasis extends GameMapOpen{
     public static readonly MAP_ID:MapType = MapType.DESERT_OASIS;
 
     constructor(){
-        super(DesertOasis.NAME, DesertOasis.MAP_ID, getMapData(DesertOasis.MAP_ID));
+        super(DesertOasis.NAME, DesertOasis.MAP_ID, getMapData(DesertOasis.NAME));
 
         this.createTransportNode(TransportNodeType.AIRSHIP, CentralCity.NAME, 1, 5, CentralCity.MAP_ID, 2, 6);
     }
@@ -98,15 +98,17 @@ class VolcanicWastelands extends GameMapOpen{
     public static readonly MAP_ID:MapType = MapType.VOLCANIC_WASTELANDS;
 
     constructor(){
-        super(VolcanicWastelands.NAME, VolcanicWastelands.MAP_ID, getMapData(VolcanicWastelands.MAP_ID));
+        super(VolcanicWastelands.NAME, VolcanicWastelands.MAP_ID, getMapData(VolcanicWastelands.NAME));
 
         this.createTransportNode(TransportNodeType.AIRSHIP, CentralCity.NAME, 1, 5, CentralCity.MAP_ID, 2, 8);
     }
 }
 
 class RaiderEncampment extends GameMapInstance{
+    public static readonly NAME:string =    "Raider Encampment";
+
     constructor(){
-        super(getInstanceName(MapInstanceType.RAIDER_ENCAMPMENT), MapInstanceType.RAIDER_ENCAMPMENT, getMapData(MapInstanceType.RAIDER_ENCAMPMENT));
+        super(getInstanceName(MapInstanceType.RAIDER_ENCAMPMENT), MapInstanceType.RAIDER_ENCAMPMENT, getMapData(RaiderEncampment.NAME));
 
         this.createTransportNode(TransportNodeType.PORTAL, "Exit Encampment", 10, 3, Hinterlands.MAP_ID, 1, 1);
     }
