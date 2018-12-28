@@ -4,6 +4,7 @@ import { Team } from "../data/Data";
 
 export interface GameObjectConfig{
     team?:Team;
+    ownerID?:string;
     name:string;
     type:string;
     x?:number;
@@ -21,10 +22,12 @@ export interface GameObjectState{ // update data
     facing?:Facing;
     moveSpeed?:number;
     stunned?:boolean;
+    objectID:string;
 }
 
 export interface GameObjectFullState{ // spawn data
     objectID:string;
+    ownerID:string;
     team:Team;
     name:string;
     type:string;
@@ -53,6 +56,7 @@ export abstract class GameObject extends EventEmitter{
     private static tokenGen:TokenGenerator = new TokenGenerator(16);
 
     private _objectID:string;
+    private _ownerID:string;
     private _team:Team;
     private _type:string;
     private _name:string;
@@ -68,6 +72,7 @@ export abstract class GameObject extends EventEmitter{
         super();
 
         this._objectID = GameObject.tokenGen.nextToken();
+        this._ownerID = config.ownerID || null;
         this._name = config.name;
         this._type = config.type;
         this.x = config.x;
@@ -112,6 +117,7 @@ export abstract class GameObject extends EventEmitter{
     public getState():GameObjectFullState{
         return {
             objectID:       this.objectID,
+            ownerID:        this.ownerID,
             team:           this.team,
             name:           this.name,
             type:           this.type,
@@ -161,6 +167,10 @@ export abstract class GameObject extends EventEmitter{
 
     public get objectID():string{
         return this._objectID;
+    }
+
+    public get ownerID():string{
+        return this._ownerID;
     }
 
     public get team():Team{

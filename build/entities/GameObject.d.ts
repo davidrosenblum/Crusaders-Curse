@@ -3,6 +3,7 @@ import { EventEmitter } from "events";
 import { Team } from "../data/Data";
 export interface GameObjectConfig {
     team?: Team;
+    ownerID?: string;
     name: string;
     type: string;
     x?: number;
@@ -19,9 +20,11 @@ export interface GameObjectState {
     facing?: Facing;
     moveSpeed?: number;
     stunned?: boolean;
+    objectID: string;
 }
 export interface GameObjectFullState {
     objectID: string;
+    ownerID: string;
     team: Team;
     name: string;
     type: string;
@@ -46,6 +49,7 @@ export declare const enum Facing {
 export declare abstract class GameObject extends EventEmitter {
     private static tokenGen;
     private _objectID;
+    private _ownerID;
     private _team;
     private _type;
     private _name;
@@ -68,6 +72,7 @@ export declare abstract class GameObject extends EventEmitter {
     moveSpeed: number;
     isStunned: boolean;
     readonly objectID: string;
+    readonly ownerID: string;
     readonly name: string;
     readonly type: string;
 }

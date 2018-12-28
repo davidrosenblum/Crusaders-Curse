@@ -4,6 +4,7 @@ import { getGameObjectType } from "./GameObjects";
 import { GameObjectFactory } from "./GameObjectFactory";
 import { TransportNodeFactory } from "./TransportNodeFactory";
 import { MapTileTypes } from "./MapTileTypes";
+import Client from "./Client";
 
 export const TILE_SIZE = 64;
 
@@ -21,6 +22,10 @@ class Game extends EventEmitter{
         this.collisionGrid = null;
 
         this.todo = null;
+
+        Client.on("object-create", evt => this.createUnit(evt.object));
+        Client.on("object-delete", evt => this.deleteUnit(evt.objectID));
+        Client.on("object-update", evt => this.updateUnit(evt.update));
     }
 
     async loadMap(mapState){
@@ -85,15 +90,21 @@ class Game extends EventEmitter{
     }
 
     createUnit(data){
-        let object = GameObjectFactory.create(data.type, data.x, data.y, data.anim, data.name);
+        let {type, spawnCoords, ownerID} = data;
+
+        let object = GameObjectFactory.create(data);
+        
         if(object){
-            if(data.type === "player"){
+            if(type === "player"){
                 // check if client's player
+                if(Client.clientID === ownerID){
+
+                }
             }
-    
+            
             let task = () => {
                 if(this.units.addObject(object)){
-                    if(data.spawnCoords){
+                    if(spawnCoords){
                         this.layers.addAt(object, data.spawnCoords.col, data.spawnCoords.row);
                     }
                     else{
