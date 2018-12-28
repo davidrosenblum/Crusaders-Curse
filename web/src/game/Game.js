@@ -11,7 +11,7 @@ class Game extends EventEmitter{
     constructor(){
         super();
 
-        this.renderer = new fw.Renderer();
+        this.renderer = new fw.Renderer(1280, 720);
         this.keys = new fw.KeyboardWatcher();
         this.layers = new fw.MapLayers();
         this.units = new fw.MPEntityStorage();
@@ -23,8 +23,10 @@ class Game extends EventEmitter{
         this.todo = null;
     }
 
-    loadMap(mapState){
+    async loadMap(mapState){
         this.todo = [];
+
+        await fw.AssetUtils.loadAliases();
 
         let {transportNodes, units, mapData, name} = mapState;
         let {background, midground, foreground} = mapData;
@@ -55,9 +57,15 @@ class Game extends EventEmitter{
 
         this.todo.forEach(task => task());
         this.todo = null;
+
+        this.renderer.startRendering(this.layers.mapSprite);
+
+        this.emit("map-load");
     } 
 
     unloadMap(){
+        this.renderer.stopRendering();
+
         this.layers.removeAll();
 
         this.scroller = null;

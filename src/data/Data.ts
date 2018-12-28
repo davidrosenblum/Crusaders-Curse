@@ -71,8 +71,8 @@ export interface MapData{
     foreground?:number[][]
 }
 
-export const getMapData = function(id:number):MapData{
-    return MAP_DATA[id] || null;
+export const getMapData = function(name:string):MapData{
+    return MAP_DATA[name] || null;
 }
 
 export const enum MapInstanceType{
