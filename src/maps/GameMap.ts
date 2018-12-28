@@ -3,7 +3,7 @@ import { GameClient } from "../server/GameClient";
 import { CasterObject } from "../entities/CasterObject";
 import { TransportNode, TransportNodeFullState, TransportNodeType } from "./TransportNode";
 import { OpCode, Status, MapData, NPCType } from "../data/Data";
-import { GameObjectFullState } from "../entities/GameObject";
+import { GameObjectFullState, GameObjectState } from "../entities/GameObject";
 import { CombatStats } from "../entities/CombatObject";
 import { NPC } from "../entities/NPC";
 import { NPCFactory } from "../entities/NPCFactory";
@@ -114,6 +114,16 @@ export abstract class GameMap extends EventEmitter{
         return false;
     }
 
+    public updateUnit(update:GameObjectState):void{
+        let unit:CasterObject = this.getUnitById(update.objectID);
+        
+        if(unit){
+            unit.setState(update);
+
+            this.bulkUpdate(OpCode.OBJECT_UPDATE, {update}, Status.GOOD, this._clients[unit.ownerID]);
+        }
+    }
+
     public createTransportNode(type:TransportNodeType, text:string, row:number, col:number, outMapID, outX, outY):void{
         let tnode:TransportNode = new TransportNode(type, text, row, col, outMapID, outX, outY);
 
@@ -121,10 +131,7 @@ export abstract class GameMap extends EventEmitter{
     }
 
     public createNPC(type:NPCType, row:number=0, col:number=0, anim?:string, name?:string):void{
-        let x:number = this._mapData.tileSize * col;
-        let y:number = this._mapData.tileSize * row;
-
-        let npc:NPC = NPCFactory.createNPC(type, {x, y, name, anim});
+        let npc:NPC = NPCFactory.createNPC(type, {row, col, name, anim});
         this.addUnit(npc);
     }
 
@@ -137,11 +144,11 @@ export abstract class GameMap extends EventEmitter{
     }
 
     public getUnitStats(objectID:string):CombatStats{
-        let target:CasterObject = this.getObjectById(objectID);
+        let target:CasterObject = this.getUnitById(objectID);
         return target ? target.getCombatStats() : null;
     }
 
-    public getObjectById(objectID:string):CasterObject{
+    public getUnitById(objectID:string):CasterObject{
         return this._units[objectID] || null;
     }
  

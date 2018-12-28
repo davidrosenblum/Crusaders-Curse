@@ -76,6 +76,12 @@ class Client extends EventEmitter{
                 return this.handleEnterMap(data, status);
             case OpCode.CHAT_MESSAGE:
                 return this.handleChat(data, status);
+            case OpCode.OBJECT_CREATE:
+                return this.handleObjectCreate(data);
+            case OpCode.OBJECT_DELETE:
+                return this.handleObjectDelete(data);
+            case OpCode.OBJECT_UPDATE:
+                return this.handleObjectUpdate(data);
         }
     }
 
@@ -124,6 +130,21 @@ class Client extends EventEmitter{
             let {chat, from} = data;
             this.emit("chat", {chat, from, success: true})
         }
+    }
+
+    handleObjectCreate(data){
+        let {object} = data;
+        this.emit("object-create", {object});
+    }
+
+    handleObjectDelete(data){
+        let {objectID} = data;
+        this.emit("object-delete", {objectID});
+    }
+
+    handleObjectUpdate(data){
+        let {update} = data;
+        this.emit("object-update", {update});
     }
 
     send(opCode, data){
