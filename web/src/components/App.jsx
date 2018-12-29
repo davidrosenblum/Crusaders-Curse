@@ -29,7 +29,10 @@ export class App extends React.Component{
     }
 
     onClientClose(){
-        this.setState({menu: "landing"});
+        let menu = this.state.menu;
+        if(menu === "game" || menu === "character-create" || menu === "character-select"){
+            this.setState({menu: "login"});
+        }
 
         ModalDispatcher.modal(
             "Unable to connect to server. The server is probably offline.",

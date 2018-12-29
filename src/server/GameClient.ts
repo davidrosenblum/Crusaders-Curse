@@ -24,14 +24,14 @@ export class GameClient{
     private _conn:websocket.connection;
     private _clientID:string;
     private _accountData:AccountData;
-    private _playerName:string;
+    private _selectedName:string;
     public player:Player;
 
     constructor(connection:websocket.connection){
         this._conn = connection;
         this._clientID = GameClient.tokenGen.nextToken();
         this._accountData = null;
-        this._playerName = null;
+        this._selectedName = null;
         this.player = null;
     }
 
@@ -49,8 +49,8 @@ export class GameClient{
         this._accountData = accountData;
     }
 
-    public setPlayerName(playerName:string):void{
-        this._playerName = playerName;
+    public setSelectedName(playerName:string):void{
+        this._selectedName = playerName;
     }
 
     public get username():string{
@@ -69,8 +69,8 @@ export class GameClient{
         return this._accountData !== null;
     }
 
-    public get playerName():string{
-        return this._playerName;
+    public get selectedName():string{
+        return this._selectedName;
     }
 
     public get clientID():string{

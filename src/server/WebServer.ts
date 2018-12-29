@@ -6,8 +6,8 @@ import { MongoClient } from "mongodb";
 import { SettingsUtils, SettingsConfig } from "../utils/SettingsUtils";
 import { DBController } from "../database/DBController";
 import { RequestHandlerUtils } from "../utils/RequestHandlerUtils";
-import { AccountCreateHandler } from './handlers/AccountCreateHandler';
-import { GameManager } from "./GameManager";
+import { AccountCreateHandler } from "./webhandlers/AccountCreateHandler";
+import { GameController } from "./GameController";
 
 export class WebServer{
     private _httpServer:http.Server;
@@ -15,7 +15,7 @@ export class WebServer{
     private _app:express.Application;
     private _settings:SettingsConfig;
     private _database:DBController;
-    private _game:GameManager;
+    private _game:GameController;
 
     constructor(){
         this._app = express().use(express.static(`${__dirname}/../../web/build`));
@@ -60,7 +60,7 @@ export class WebServer{
             let mongoDbName:string = process.env.MONGO_DB || this._settings.mongo_database.database_name;
             let mongoClient:MongoClient = await MongoClient.connect(mongoUri, {useNewUrlParser: true});
             this._database = new DBController(mongoClient.db(mongoDbName));
-            this._game = new GameManager(this._database);
+            this._game = new GameController(this._database);
             console.log("Database connected.\n");
 
             console.log("Starting server...");
