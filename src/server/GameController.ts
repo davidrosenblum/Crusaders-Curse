@@ -94,40 +94,6 @@ export class GameController{
         }
     }
 
-    private processStats(client:GameClient, data:any):void{
-        if(!client.hasAccountData || !client.player){
-            client.send(OpCode.OBJECT_STATS, "Account is not logged in.", Status.BAD);
-            return;
-        }
-
-        let {objectID=null} = data; 
-
-        if(!objectID){
-            client.send(OpCode.OBJECT_STATS, "Invalid json request - missing objectID.", Status.BAD);
-            return;
-        }
-
-        let map:GameMap = client.player.map;
-        if(map){
-            let stats:CombatStats = client.player.map.getUnitStats(objectID);
-
-            if(stats){
-                client.send(OpCode.OBJECT_STATS, stats, Status.GOOD);
-            }
-            else{
-                client.send(OpCode.OBJECT_STATS, "Invalid target ID.", Status.BAD);
-            }
-        }
-        else{
-            client.send(OpCode.OBJECT_STATS, "You are not in a map.", Status.BAD);
-        }
-        
-    }
-
-    
-
-    
-
     public get numClients():number{
         return this._numClients;
     }
