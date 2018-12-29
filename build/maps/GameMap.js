@@ -100,13 +100,13 @@ var GameMap = /** @class */ (function (_super) {
             this.bulkUpdate(13 /* OBJECT_UPDATE */, { update: update }, 2 /* GOOD */, this._clients[unit.ownerID]);
         }
     };
-    GameMap.prototype.createTransportNode = function (type, text, row, col, outMapID, outX, outY) {
+    GameMap.prototype.createTransportNode = function (type, text, col, row, outMapID, outX, outY) {
         var tnode = new TransportNode_1.TransportNode(type, text, row, col, outMapID, outX, outY);
         this._transportNodes[tnode.nodeID] = tnode;
     };
-    GameMap.prototype.createNPC = function (type, row, col, anim, name) {
-        if (row === void 0) { row = 0; }
+    GameMap.prototype.createNPC = function (type, col, row, anim, name) {
         if (col === void 0) { col = 0; }
+        if (row === void 0) { row = 0; }
         var npc = NPCFactory_1.NPCFactory.createNPC(type, { row: row, col: col, name: name, anim: anim });
         this.addUnit(npc);
     };

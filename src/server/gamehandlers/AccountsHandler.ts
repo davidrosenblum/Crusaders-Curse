@@ -38,6 +38,7 @@ export class AccountsHandler{
 
         this._database.getAccount(username, password)
             .then(account => {
+                this._accounts[username] = client;
                 client.setAccountData(account);
                 client.send(OpCode.ACCOUNT_LOGIN, {clientID: client.clientID}, Status.GOOD);
             }) 
@@ -46,6 +47,7 @@ export class AccountsHandler{
 
     public logout(client:GameClient):void{
         if(!client.hasAccountData){
+            delete this._accounts[client.username];
             client.send(OpCode.ACCOUNT_LOGOUT, "Account is not logged in.", Status.BAD);
             return;
         }

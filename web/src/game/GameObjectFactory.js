@@ -7,7 +7,7 @@ export class GameObjectFactory{
         let Type = getGameObjectType(type);
 
         if(Type){
-            let object = new Type(x, y, name, objectID, team);
+            let object = new Type(x, y, objectID, team);
 
             if(anim) object.playAnimation(anim);
 

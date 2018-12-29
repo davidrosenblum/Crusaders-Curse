@@ -27,7 +27,7 @@ export class MapsHandler{
         return new Promise((resolve, reject) => {
             this._database.getCharacter(client.accountID, client.selectedName)
                 .then(saveData => {
-                    client.player = PlayerFactory.restoreFromSave(saveData);
+                    client.player = PlayerFactory.restoreFromSave(saveData, client.clientID);
                     resolve(saveData);
                 })
                 .catch(err => reject(err));

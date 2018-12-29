@@ -17,6 +17,7 @@ class Game extends EventEmitter{
         this.layers = new fw.MapLayers();
         this.units = new fw.MPEntityStorage();
 
+        this.player = null;
         this.scroller = null;
         this.mapBounds = null;
         this.collisionGrid = null;
@@ -64,6 +65,7 @@ class Game extends EventEmitter{
         this.todo = null;
 
         this.renderer.startRendering(this.layers.mapSprite);
+        this.renderer.on("render", this.onFrame.bind(this));
 
         this.emit("map-load");
     } 
@@ -76,6 +78,31 @@ class Game extends EventEmitter{
         this.scroller = null;
         this.mapBounds = null;
         this.collisionGrid = null;
+        this.player = null;
+        this.units.clear();
+    }
+
+    onFrame(){
+        this.updateMovement();
+    }
+
+    updateMovement(){
+        if(this.player && this.keys.numKeys > 0){
+            if(this.keys.isKeyDown('w')){
+                this.player.moveUp(this.collisionGrid, this.mapBounds, this.scroller);
+            }
+            else if(this.keys.isKeyDown('s')){
+                this.player.moveDown(this.collisionGrid, this.mapBounds, this.scroller);
+            }
+            if(this.keys.isKeyDown('a')){
+                this.player.moveLeft(this.collisionGrid, this.mapBounds, this.scroller);
+            }
+            else if(this.keys.isKeyDown('d')){
+                this.player.moveRight(this.collisionGrid, this.mapBounds, this.scroller);
+            }
+
+            this.layers.depthSort();
+        }
     }
 
     updateUI(){
@@ -83,9 +110,11 @@ class Game extends EventEmitter{
     }
 
     createTransportNode(data){
-        let tnode = TransportNodeFactory.create(data.type, data.text, data.outMapID, data.outRow, data.outCol);
+        let {col=0, row=0} = data;
+
+        let tnode = TransportNodeFactory.create(data);
         if(tnode){
-            this.layers.add(tnode);
+            this.layers.addAt(tnode, col, row);
         }
     }
 
@@ -98,12 +127,12 @@ class Game extends EventEmitter{
             if(type === "player"){
                 // check if client's player
                 if(Client.clientID === ownerID){
-
+                    this.player = object;
                 }
             }
             
             let task = () => {
-                if(this.units.addObject(object)){
+                if(this.units.addObject(object) || true){
                     if(spawnCoords){
                         this.layers.addAt(object, data.spawnCoords.col, data.spawnCoords.row);
                     }
@@ -125,7 +154,6 @@ class Game extends EventEmitter{
     deleteUnit(objectID){
         let task = () => {
             let object = this.units.getObject(objectID);
-
             if(object && this.units.removeObject(object)){
                 object.remove();
             }
