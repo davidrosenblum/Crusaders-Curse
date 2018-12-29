@@ -187,6 +187,14 @@ class Client extends EventEmitter{
         this.send(OpCode.CHAT_MESSAGE, {chat});
     }
 
+    consumePotion(potion){
+        this.send(OpCode.POTION_CONSUME, {potion});
+    }
+
+    castAbility(abilityName){
+        this.send(OpCode.ABILITY_CAST, {abilityName});
+    }
+
     get isConnected(){
         return this.socket ? this.socket.readyState === 1 : false;
     }
