@@ -54,12 +54,11 @@ export abstract class GameMap extends EventEmitter{
             this._clients[client.clientID] = client;
             this._numClients++;
 
-            let mapState:GameMapFullState = this.getState();
-            let playerState:PlayerState = client.player.getPlayerState();
-
-            client.send(OpCode.ENTER_MAP, {mapState, playerState}, Status.GOOD);
-
             let nextStep:Function = () => {
+                let mapState:GameMapFullState = this.getState();
+                let playerState:PlayerState = client.player.getPlayerState();
+                client.send(OpCode.ENTER_MAP, {mapState, playerState}, Status.GOOD);
+
                 this.addUnit(client.player);
                 this.submitChat(`${client.player.name} connected.`);
             };

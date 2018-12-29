@@ -1,7 +1,7 @@
 import * as websocket from "websocket";
 import { GameClient } from "./GameClient";
 import { DBController } from "../database/DBController";
-export declare class GameManager {
+export declare class GameController {
     private _database;
     private _clients;
     private _numClients;
