@@ -1,12 +1,15 @@
 import * as fw from "@davidrosenblum/frostwork";
+import silverImg from "../img/silver.png";
 
 export class TransportNodeFactory{
-    static create(type, text, outMapID, outRow, outCol){
+    static create(options){
+        let {type, text, outMapID, outRow, outCol} = options;
+
         switch(type){
             case "airship":
-                return new TransportNode(null, 100, 100, text, outMapID, outRow, outCol);
+                return new TransportNode(fw.AssetUtils.getImageURLByAlias("silver"), 100, 100, text, outMapID, outRow, outCol);
             case "portal":
-                return new TransportNode(null, 100, 100, text, outMapID, outRow, outCol);
+                return new TransportNode(fw.AssetUtils.getImageURLByAlias("silver"), 100, 100, text, outMapID, outRow, outCol);
             default:
                 return null;
         }
@@ -24,3 +27,7 @@ export class TransportNode extends fw.GameEntity{
         this.outCol = outCol;
     }
 }
+
+fw.AssetUtils.setImageAliasMany({
+    "silver": silverImg
+});

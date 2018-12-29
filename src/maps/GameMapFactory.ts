@@ -51,10 +51,10 @@ class CentralCity extends GameMapOpen{
     constructor(){
         super("Central City", MapType.CENTRAL_CITY, getMapData(CentralCity.NAME));
 
-        this.createTransportNode(TransportNodeType.AIRSHIP, Hinterlands.NAME, 2, 2, Hinterlands.MAP_ID, 1, 5);
-        this.createTransportNode(TransportNodeType.AIRSHIP, NorthernRuins.NAME, 2, 4, NorthernRuins.MAP_ID, 1, 5);
-        this.createTransportNode(TransportNodeType.AIRSHIP, DesertOasis.NAME, 2, 6, DesertOasis.MAP_ID, 1, 5);
-        this.createTransportNode(TransportNodeType.AIRSHIP, VolcanicWastelands.NAME, 2, 8, VolcanicWastelands.MAP_ID, 1, 5);
+        this.createTransportNode(TransportNodeType.AIRSHIP, `<${Hinterlands.NAME} Airship>`, 2, 2, Hinterlands.MAP_ID, 1, 5);
+        this.createTransportNode(TransportNodeType.AIRSHIP, `<${NorthernRuins.NAME} Airship>`, 2, 4, NorthernRuins.MAP_ID, 1, 5);
+        this.createTransportNode(TransportNodeType.AIRSHIP, `<${DesertOasis.NAME} Airship>`, 2, 6, DesertOasis.MAP_ID, 1, 5);
+        this.createTransportNode(TransportNodeType.AIRSHIP, `<${VolcanicWastelands.NAME} Airship>`, 2, 8, VolcanicWastelands.MAP_ID, 1, 5);
 
         this.createNPC(NPCType.PARAGON, 5, 3);
     }

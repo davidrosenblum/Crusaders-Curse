@@ -123,13 +123,13 @@ export abstract class GameMap extends EventEmitter{
         }
     }
 
-    public createTransportNode(type:TransportNodeType, text:string, row:number, col:number, outMapID, outX, outY):void{
+    public createTransportNode(type:TransportNodeType, text:string, col:number, row:number, outMapID, outX, outY):void{
         let tnode:TransportNode = new TransportNode(type, text, row, col, outMapID, outX, outY);
 
         this._transportNodes[tnode.nodeID] = tnode;
     }
 
-    public createNPC(type:NPCType, row:number=0, col:number=0, anim?:string, name?:string):void{
+    public createNPC(type:NPCType, col:number=0, row:number=0, anim?:string, name?:string):void{
         let npc:NPC = NPCFactory.createNPC(type, {row, col, name, anim});
         this.addUnit(npc);
     }

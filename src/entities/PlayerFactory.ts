@@ -3,20 +3,20 @@ import { CharacterDocument } from "../database/collections/CharactersCollection"
 import { Player } from "./Player";
 
 export class PlayerFactory{
-    public static restoreFromSave(saveData:CharacterDocument):Player{
+    public static restoreFromSave(saveData:CharacterDocument, ownerID:string):Player{
         switch(saveData.archetype_id){
             case Archetype.KNIGHT:
-                return PlayerFactory.createKnight(saveData);
+                return PlayerFactory.createKnight(saveData, ownerID);
             case Archetype.RANGER:
-                return PlayerFactory.createRanger(saveData);
+                return PlayerFactory.createRanger(saveData, ownerID);
             case Archetype.MAGE:
-                return PlayerFactory.createMage(saveData);
+                return PlayerFactory.createMage(saveData, ownerID);
             default:
                 return null;
         }
     }
 
-    private static createKnight(saveData:CharacterDocument):Player{
+    private static createKnight(saveData:CharacterDocument, ownerID:string):Player{
         return new Player(saveData, {
             name:               saveData.name,
             type:               "player",
@@ -38,11 +38,12 @@ export class PlayerFactory{
             damageMultiplier:   1,
             x:                  saveData.last_map.x,
             y:                  saveData.last_map.y,
-            teamID:             Team.KINGS_LEGION
+            team:               Team.KINGS_LEGION,
+            ownerID
         });
     }
 
-    private static createRanger(saveData:CharacterDocument):Player{
+    private static createRanger(saveData:CharacterDocument, ownerID:string):Player{
         return new Player(saveData, {
             name:               saveData.name,
             type:               "player",
@@ -64,11 +65,12 @@ export class PlayerFactory{
             damageMultiplier:   1,
             x:                  saveData.last_map.x,
             y:                  saveData.last_map.y,
-            teamID:             Team.KINGS_LEGION
+            team:               Team.KINGS_LEGION,
+            ownerID
         });
     }
 
-    private static createMage(saveData:CharacterDocument):Player{
+    private static createMage(saveData:CharacterDocument, ownerID:string):Player{
         return new Player(saveData, {
             name:               saveData.name,
             type:               "player",
@@ -90,7 +92,8 @@ export class PlayerFactory{
             damageMultiplier:   1,
             x:                  saveData.last_map.x,
             y:                  saveData.last_map.y,
-            teamID:             Team.KINGS_LEGION
+            team:               Team.KINGS_LEGION,
+            ownerID
         });
     }
 }

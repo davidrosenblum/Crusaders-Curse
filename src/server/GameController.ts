@@ -32,8 +32,8 @@ export class GameController{
 
     public createClient(conn:websocket.connection):void{
         let client:GameClient = new GameClient(conn);
-
         console.log(`Client-${client.clientID} connected.`);
+
         conn.on("message", data => {
             console.log(data.utf8Data);
             GameClient.parseRequests(client, data, this.handlClientRequest.bind(this));
@@ -44,7 +44,10 @@ export class GameController{
             console.log(err.message);
         });
 
-        conn.on("close", () => this.removeClient(client));
+        conn.on("close", () => {
+            console.log(`Client-${client.clientID} disconnected.`);
+            this.removeClient(client);
+        });
     }
 
     public removeClient(client:GameClient):void{
@@ -53,6 +56,10 @@ export class GameController{
 
             if(client.hasAccountData){
                 this._accounts.logout(client);
+            }
+
+            if(client.player && client.player.map){
+                client.player.map.removeClient(client);
             }
         }
     }
@@ -85,8 +92,10 @@ export class GameController{
             case OpCode.CHAT_MESSAGE:
                 this._chat.chatMessage(client, data);
                 break;
+            case OpCode.OBJECT_UPDATE:
+                this._maps.updateUnit(client, data);
             case OpCode.OBJECT_STATS:
-                this.processStats(client, data);
+                this._maps.getUnitStats(client, data);
                 break;
             default:
                 client.send(OpCode.INVALID_OPCODE, "Invalid OpCode", Status.BAD);
