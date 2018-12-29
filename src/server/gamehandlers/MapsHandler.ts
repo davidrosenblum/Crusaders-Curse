@@ -6,6 +6,9 @@ import { GameMapInstance } from "../../maps/GameMapInstance";
 import { CharacterDocument } from "../../database/collections/CharactersCollection";
 import { PlayerFactory } from "../../entities/PlayerFactory";
 import { DBController } from "../../database/DBController";
+import { GameMap } from "../../maps/GameMap";
+import { CombatStats } from "../../entities/CombatObject";
+import { GameObjectState } from "../../entities/GameObject";
 
 export class MapsHandler{
     private _database:DBController;
@@ -118,6 +121,47 @@ export class MapsHandler{
         }
         catch(err){
             client.send(OpCode.ENTER_INSTANCE, err.message, Status.BAD);
+        }
+    }
+
+    public updateUnit(client:GameClient, data:any):void{
+        if(!client.player || !client.player.map){
+            client.send(OpCode.OBJECT_STATS, "Not in a room with a player.", Status.BAD);
+            return;
+        }
+
+        let {objectID=-1, x=undefined, y=undefined, anim=undefined} = data;
+
+        let update:GameObjectState = {objectID, x, y, anim};
+
+        client.player.map.updateUnit(update);   // sends the update 
+    }
+
+    public getUnitStats(client:GameClient, data:any):void{
+        if(!client.player || !client.player.map){
+            client.send(OpCode.OBJECT_STATS, "Not in a room with a player.", Status.BAD);
+            return;
+        }
+
+        let {objectID=null} = data; 
+        if(!objectID){
+            client.send(OpCode.OBJECT_STATS, "Invalid json request - missing objectID.", Status.BAD);
+            return;
+        }
+
+        let map:GameMap = client.player.map;
+        if(map){
+            let stats:CombatStats = client.player.map.getUnitStats(objectID);
+
+            if(stats){
+                client.send(OpCode.OBJECT_STATS, stats, Status.GOOD);
+            }
+            else{
+                client.send(OpCode.OBJECT_STATS, "Invalid target ID.", Status.BAD);
+            }
+        }
+        else{
+            client.send(OpCode.OBJECT_STATS, "You are not in a map.", Status.BAD);
         }
     }
 

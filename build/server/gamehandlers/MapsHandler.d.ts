@@ -9,5 +9,7 @@ export declare class MapsHandler {
     private loadPlayer;
     enterMap(client: GameClient, data: any): void;
     enterInstance(client: GameClient, data: any): void;
+    updateUnit(client: GameClient, data: any): void;
+    getUnitStats(client: GameClient, data: any): void;
     readonly numInstances: number;
 }

@@ -13,6 +13,5 @@ export declare class GameController {
     createClient(conn: websocket.connection): void;
     removeClient(client: GameClient): void;
     private handlClientRequest;
-    private processStats;
     readonly numClients: number;
 }
