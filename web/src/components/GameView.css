@@ -11,6 +11,7 @@
     border-radius: 6px;
     padding: 5px;
     width: 300px;
+    box-shadow: 1px 1px 1px 1px black;
 }
 
 #hud-chat input:focus, textarea:focus{
@@ -27,4 +28,12 @@
 
 #game-canvas-container canvas{
     background-color: black;
+}
+
+#hud-abilities{
+    opacity: 0.9;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    box-shadow: 1px 1px 1px 1px black;
 }

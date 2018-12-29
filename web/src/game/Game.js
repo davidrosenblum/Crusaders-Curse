@@ -12,7 +12,7 @@ class Game extends EventEmitter{
     constructor(){
         super();
 
-        this.renderer = new fw.Renderer(1280, 720);
+        this.renderer = new fw.Renderer(960, 540);
         this.keys = new fw.KeyboardWatcher();
         this.layers = new fw.MapLayers();
         this.units = new fw.MPEntityStorage();
@@ -53,6 +53,7 @@ class Game extends EventEmitter{
         };
 
         let gmd = this.layers.buildMap({background: layer1, midground: layer2, foreground: layer3, tileSize: TILE_SIZE});
+        console.log('gmd', gmd);
 
         this.mapBounds = gmd.mapBounds;
         this.collisionGrid = gmd.collisionGrid;

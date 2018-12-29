@@ -5,13 +5,13 @@ import redImg from "../img/red.png";
 
 export class Player extends fw.MPGameEntity{
     constructor(x, y, objectID, teamID){
-        super(fw.AssetUtils.getImageURLByAlias("red"), 100, 100, x, y, objectID, teamID);
+        super(fw.AssetUtils.getImageURLByAlias("red"), 100, 150, x, y, objectID, teamID);
     }
 }
 
 export class Paragon extends fw.MPGameEntity{
     constructor(x, y, objectID, teamID){
-        super(fw.AssetUtils.getImageURLByAlias("blue"), 100, 100, x, y, objectID, teamID);
+        super(fw.AssetUtils.getImageURLByAlias("blue"), 100, 150, x, y, objectID, teamID);
     }
 }
 
