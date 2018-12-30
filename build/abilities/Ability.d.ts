@@ -19,7 +19,10 @@ export declare abstract class Ability extends EventEmitter {
     private _alwaysHit;
     private _ready;
     constructor(config: AbilityConfig);
-    cast(caster: CasterObject, target: CasterObject, targets: CasterObject[]): boolean;
+    cast(caster: CasterObject, target: CasterObject, targets: {
+        [id: string]: CasterObject;
+    }): void;
+    private castSubsequentTargets;
     validateAlliesOnly(caster: CasterObject, target: CasterObject): boolean;
     validateAlliesAndSelf(caster: CasterObject, target: CasterObject): boolean;
     validateEnemiesOnly(caster: CasterObject, target: CasterObject): boolean;

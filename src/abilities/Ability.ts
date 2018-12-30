@@ -33,47 +33,70 @@ export abstract class Ability extends EventEmitter{
         this._ready = true;
     }
 
-    public cast(caster:CasterObject, target:CasterObject, targets:CasterObject[]):boolean{
+    public cast(caster:CasterObject, target:CasterObject, targets:{[id:string]: CasterObject}):void{
+        // validate the abiltiy is ready to cast
         if(!this.isReady){
             throw new Error("Ability still recharging.");
         }
 
+        // validate has enough mana
         if(caster.mana < this.manaCost){
             throw new Error("Not enough mana.");
         }
 
+        // validate target can be targetted
         if(!this.validateTarget(caster, target)){
             throw new Error("Invalid target.");
         }
 
+        // validate in range
         if(!caster.inRange(target, this.range)){
             throw new Error("Target out of range.");
         }
 
-        this.effect(target);
-
-
-        let targetsRemaining:number = this.maxTargets - 1;
-
-        for(let target of targets){
-            if(targetsRemaining > 0){
-                if(caster.inRange(target, this.range) && this.validateTarget(caster, target)){
-                    if(this.alwaysHit || !caster.rollDefense()){
-                        this.effect(target);
-                    }
-                    
-                    targetsRemaining--;
-                }
-            }
-        }
-
+        // consume mana and make ability no longer available
+        target.useMana(this.manaCost);
         this._ready = false;
+
+        // set recharge timeout 
         setTimeout(() => {
             this._ready = true;
             this.emit("recharged");
         }, this._recharge);
 
-        return true;
+        // cast on primary target
+        if(this.alwaysHit || !caster.rollDefense()){
+            // hit - effect primary target (successful cast)
+            this.effect(target);
+
+            // multiple target abilities
+            if(this.maxTargets > 1){
+                this.castSubsequentTargets(caster, target, targets);
+            }
+        }
+    }
+
+    private castSubsequentTargets(caster:CasterObject, starterTarget:CasterObject, targets:{[id:string]: CasterObject}):void{
+        let targetsRemaining:number = this.maxTargets - 1;
+        
+        for(let targetID in targets){
+            let nextTarget:CasterObject = targets[targetID];
+
+            if(targetsRemaining > 0){
+                if(nextTarget === starterTarget){
+                    continue;
+                }
+                
+                if(caster.inRange(nextTarget, this.range) && this.validateTarget(caster, nextTarget)){
+                    if(this.alwaysHit || !caster.rollDefense()){
+                        this.effect(nextTarget);
+                    }
+                    
+                    targetsRemaining--;
+                }
+            }
+            else break;
+        }
     }
 
     public validateAlliesOnly(caster:CasterObject, target:CasterObject):boolean{

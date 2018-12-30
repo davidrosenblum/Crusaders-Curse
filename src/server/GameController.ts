@@ -8,6 +8,7 @@ import { AccountsHandler } from "./gamehandlers/AccountsHandler";
 import { ChatHandler } from "./gamehandlers/ChatHandler";
 import { CharactersHandler } from "./gamehandlers/CharactersHandler";
 import { MapsHandler } from "./gamehandlers/MapsHandler";
+import { AbilitiesHandler } from "./gamehandlers/AbilitiesHandler";
 
 export class GameController{
     private _database:DBController;
@@ -17,6 +18,7 @@ export class GameController{
     private _characters:CharactersHandler;
     private _maps:MapsHandler;
     private _chat:ChatHandler;
+    private _abilities:AbilitiesHandler;
 
     constructor(database:DBController){
         this._database = database;
@@ -27,7 +29,7 @@ export class GameController{
         this._accounts = new AccountsHandler(this._database);
         this._characters = new CharactersHandler(this._database, this._maps);
         this._chat = new ChatHandler();
-
+        this._abilities = new AbilitiesHandler();
     }
 
     public createClient(conn:websocket.connection):void{
@@ -94,8 +96,18 @@ export class GameController{
                 break;
             case OpCode.OBJECT_UPDATE:
                 this._maps.updateUnit(client, data);
+                break;
             case OpCode.OBJECT_STATS:
                 this._maps.getUnitStats(client, data);
+                break;
+            case OpCode.ABILITY_LIST:
+                this._abilities.getAbilities(client);
+                break;
+            case OpCode.ABILITY_CAST:
+                this._abilities.castAbility(client, data);
+                break;
+            case OpCode.ABILITY_PURCHASE:
+                this._abilities.purchaseAbility(client, data);
                 break;
             default:
                 client.send(OpCode.INVALID_OPCODE, "Invalid OpCode", Status.BAD);

@@ -29,6 +29,7 @@ export declare abstract class GameMap extends EventEmitter {
     updateUnit(update: GameObjectState): void;
     createTransportNode(type: TransportNodeType, text: string, col: number, row: number, outMapID: any, outX: any, outY: any): void;
     createNPC(type: NPCType, col?: number, row?: number, anim?: string, name?: string): void;
+    unitCastAbility(casterID: string, abilityName: string, targetID: string): void;
     hasClient(client: GameClient): boolean;
     hasUnit(unit: CasterObject): boolean;
     getUnitStats(objectID: string): CombatStats;

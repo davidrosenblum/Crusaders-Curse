@@ -38,6 +38,15 @@ export abstract class CasterObject extends CombatObject{
         return abilityName in this._abilities;
     }
 
+    public castAbility(abilityName:string, target:CasterObject, targets:{[id:string]: CasterObject}):void{
+        if(this.hasAbility(abilityName)){
+            let ability:Ability = this._abilities[abilityName];
+
+            ability.cast(this, target, targets);
+        }
+        else throw new Error(`Ability cast error - missing ability "${abilityName}".`);
+    }
+
     public setMap(map:GameMap):void{
         if(map.addUnit(this) || map.hasUnit(this)){
             this._map = map;
