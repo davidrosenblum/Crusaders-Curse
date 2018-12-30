@@ -134,6 +134,17 @@ export abstract class GameMap extends EventEmitter{
         this.addUnit(npc);
     }
 
+    public unitCastAbility(casterID:string, abilityName:string, targetID:string):void{
+        let caster:CasterObject = this.getUnitById(casterID);
+        if(!caster) throw new Error("Ability cast error - caster object not found.");
+
+        let target:CasterObject = this.getUnitById(targetID);
+        if(!target) throw new Error("Ability cast error - target object not found.");
+
+        // throws errors
+        caster.castAbility(abilityName, target, this._units);
+    }
+
     public hasClient(client:GameClient):boolean{
         return client.clientID in this._clients;
     }

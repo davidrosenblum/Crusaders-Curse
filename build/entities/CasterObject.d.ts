@@ -16,6 +16,9 @@ export declare abstract class CasterObject extends CombatObject {
     constructor(config: CasterObjectConfig);
     learnAbility(abilityName: string, level?: number): void;
     hasAbility(abilityName: string): boolean;
+    castAbility(abilityName: string, target: CasterObject, targets: {
+        [id: string]: CasterObject;
+    }): void;
     setMap(map: GameMap): void;
     getAbilities(): {
         [ability: string]: AbilityItem;

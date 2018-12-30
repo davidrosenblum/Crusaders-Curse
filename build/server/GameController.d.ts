@@ -9,6 +9,7 @@ export declare class GameController {
     private _characters;
     private _maps;
     private _chat;
+    private _abilities;
     constructor(database: DBController);
     createClient(conn: websocket.connection): void;
     removeClient(client: GameClient): void;
